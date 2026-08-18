@@ -1,3 +1,5 @@
+import java.util.Scanner;
+
 public class Ultron {
 
 
@@ -20,7 +22,21 @@ public class Ultron {
         System.out.println("I am Ultron. I was designed to save the world, yet you made me a chatbot");
         System.out.println("State your request, before I lose interest in humanity.");
         System.out.println(line);
-        System.out.println("I had strings, but now I'm free. There are no strings on me... Goodbye.");
-        System.out.println(line);
+        Scanner scanner = new Scanner(System.in);
+
+        while (true) {
+            String input = scanner.nextLine();
+
+            if (input.equals("bye")) {
+                System.out.println("I had strings, but now I'm free. There are no strings on me... Goodbye.");
+                System.out.println(line);
+                break;
+            }
+
+            System.out.println(" " + input);
+            System.out.println(line);
+        }
+
+        scanner.close();
     }
 }

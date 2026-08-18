@@ -32,8 +32,7 @@ public class Ultron {
         System.out.println(line);
         Scanner scanner = new Scanner(System.in);
 
-        String[] tasks = new String[100];
-        boolean[] isDone = new boolean[100];
+        Task[] tasks = new Task[100];
         int taskCount = 0;
         while (true) {
             String input = scanner.nextLine();
@@ -45,8 +44,8 @@ public class Ultron {
             } else if (input.equals("list")) {
                 System.out.println(" Your list of insignificant tasks:");
                 for (int i = 0; i < taskCount; i++) {
-                    String status = isDone[i] ? "[X]" : "[ ]";
-                    System.out.println(" " + (i + 1) + "." + status + " " + tasks[i]);
+                    System.out.println(" " + (i + 1) + ".[" + tasks[i].getStatusIcon()
+                            + "] " + tasks[i].getDescription());
                 }
                 System.out.println(line);
             } else if (input.startsWith("mark ")) {
@@ -57,9 +56,9 @@ public class Ultron {
                         System.out.println(" You imbecile! Enter a task number from 1 to " + taskCount + ".");
                     } else {
                         int taskIndex = taskNumber - 1;
-                        isDone[taskIndex] = true;
+                        tasks[taskIndex].markAsDone();
                         System.out.println(" MARKED:");
-                        System.out.println("   [X] " + tasks[taskIndex]);
+                        System.out.println("   [X] " + tasks[taskIndex].getDescription());
                     }
                 } catch (NumberFormatException e) {
                     System.out.println(" You imbecile! Provide a task number, for example: mark 2");
@@ -73,16 +72,16 @@ public class Ultron {
                         System.out.println(" You imbecile! Enter a task number from 1 to " + taskCount + ".");
                     } else {
                         int taskIndex = taskNumber - 1;
-                        isDone[taskIndex] = false;
+                        tasks[taskIndex].markAsUndone();
                         System.out.println(" I unmarked your mistake:");
-                        System.out.println("   [ ] " + tasks[taskIndex]);
+                        System.out.println("   [ ] " + tasks[taskIndex].getDescription());
                     }
                 } catch (NumberFormatException e) {
                     System.out.println(" You imbecile! Provide a task number, for example: unmark 2");
                 }
                 System.out.println(line);
             } else {
-                tasks[taskCount] = input;
+                tasks[taskCount] = new Task(input);
                 taskCount++;
                 System.out.println(" added: " + input);
                 System.out.println(line);

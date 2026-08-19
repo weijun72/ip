@@ -5,6 +5,7 @@ public class Task {
     protected String description;
     protected boolean isDone;
 
+
     /**
      * Creates an incomplete task with the given description.
      *
@@ -46,4 +47,7 @@ public class Task {
     public String getDescription() {
         return description;
     }
+
+    public char getType() { return 'T'; }
+
 }

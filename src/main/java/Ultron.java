@@ -47,6 +47,7 @@ public class Ultron {
                     System.out.println(" " + (i + 1) + ".[" + tasks[i].getStatusIcon()
                             + "] " + tasks[i].getDescription());
                 }
+                System.out.println(""line"");
                 System.out.println(line);
             } else if (input.startsWith("mark ")) {
                 String taskNumberText = input.substring(5).trim();
@@ -58,7 +59,7 @@ public class Ultron {
                         int taskIndex = taskNumber - 1;
                         tasks[taskIndex].markAsDone();
                         System.out.println(" MARKED:");
-                        System.out.println("   [X] " + tasks[taskIndex].getDescription());
+                        System.out.println("   [" + tasks[taskIndex].getType() + "] [X] " + tasks[taskIndex].getDescription());
                     }
                 } catch (NumberFormatException e) {
                     System.out.println(" You imbecile! Provide a task number, for example: mark 2");
@@ -74,17 +75,30 @@ public class Ultron {
                         int taskIndex = taskNumber - 1;
                         tasks[taskIndex].markAsUndone();
                         System.out.println(" I unmarked your mistake:");
-                        System.out.println("   [ ] " + tasks[taskIndex].getDescription());
+                        System.out.println("   [" + tasks[taskIndex].getType() + "] [ ] " + tasks[taskIndex].getDescription());
                     }
                 } catch (NumberFormatException e) {
                     System.out.println(" You imbecile! Provide a task number, for example: unmark 2");
                 }
                 System.out.println(line);
-            } else {
-                tasks[taskCount] = new Task(input);
+            } else if (input.startsWith("todo ")) {
+                String input1 = input.substring(5).trim();
+                tasks[taskCount] = new Todo(input1);
+                System.out.println(" added:\n" + "   [" + tasks[taskCount].getType() + "] [ ] " + tasks[taskCount].getDescription());
                 taskCount++;
-                System.out.println(" added: " + input);
                 System.out.println(line);
+            } else if (input.startsWith("deadline ")) {
+                String input1 = input.substring(9).trim();
+                tasks[taskCount] = new Deadline(input1);
+                System.out.println(" added:\n" + "   [" + tasks[taskCount].getType() + "] [ ] " + tasks[taskCount].getDescription());
+                taskCount++;
+            } else if (input.startsWith("event ")) {
+                String input1 = input.substring(6).trim();
+                tasks[taskCount] = new Event(input1);
+                System.out.println(" added:\n" + "   [" + tasks[taskCount].getType() + "] [ ] " + tasks[taskCount].getDescription());
+                taskCount++;
+            } else {
+                System.out.println("INVALID INPUT");
             }
         }
         scanner.close();

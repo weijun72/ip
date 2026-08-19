@@ -33,7 +33,7 @@ public class Ultron {
         System.out.println(line);
         Scanner scanner = new Scanner(System.in);
 
-        ArrayList<Task> tasks = new ArrayList<>();
+        ArrayList<Task> tasks = new ArrayList<>(100);
         int taskCount = 0;
         while (true) {
             String input = scanner.nextLine();
@@ -82,12 +82,31 @@ public class Ultron {
                         System.out.println(" You imbecile! Provide a task number, for example: unmark 2");
                     }
                     System.out.println(line);
+                } else if (input.startsWith("delete ")) {
+                    String taskNumberText = input.substring(7).trim();
+                    try {
+                        int taskNumber = Integer.parseInt(taskNumberText);
+                        if (taskNumber < 1 || taskNumber > taskCount) {
+                            System.out.println(" You imbecile! Enter a task number from 1 to " + taskCount + ".");
+                        } else {
+                            int taskIndex = taskNumber - 1;
+                            System.out.println(" DELETED:");
+                            System.out.println("   [" + tasks.get(taskIndex).getType() + "] [ ] " + tasks.get(taskIndex).getDescription());
+                            tasks.remove(taskIndex);
+                            taskCount -= 1;
+                            System.out.println("Now you have " + taskCount + " tasks in the list.");
+                            System.out.println(line);
+                        }
+                    } catch (NumberFormatException e) {
+                        System.out.println(" You imbecile! Provide a task number, for example: delete 2");
+                    }
+                    System.out.println(line);
                 } else if (input.equals("todo") || input.startsWith("todo ")) {
                     String description = input.substring(4).trim();
                     if (description.isEmpty()) {
                         throw new UltronException("You FOOL! The description of a todo cannot be empty.");
                     }
-                    tasks.set(taskCount, new Todo(description));
+                    tasks.add(new Todo(description));
                     System.out.println(" added:\n" + "   [" + tasks.get(taskCount).getType()
                             + "] [ ] " + tasks.get(taskCount).getDescription());
                     taskCount++;
@@ -95,14 +114,18 @@ public class Ultron {
                     System.out.println(line);
                 } else if (input.startsWith("deadline ")) {
                     String input1 = input.substring(9).trim();
-                    tasks.set(taskCount, new Deadline(input1));
+                    tasks.add(new Deadline(input1));
                     System.out.println(" added:\n" + "   [" + tasks.get(taskCount).getType() + "] [ ] " + tasks.get(taskCount).getDescription());
                     taskCount++;
+                    System.out.println("Now you have " + taskCount + " tasks in the list.");
+                    System.out.println(line);
                 } else if (input.startsWith("event ")) {
                     String input1 = input.substring(6).trim();
-                    tasks.set(taskCount, new Event(input1));
+                    tasks.add(new Event(input1));
                     System.out.println(" added:\n" + "   [" + tasks.get(taskCount).getType() + "] [ ] " + tasks.get(taskCount).getDescription());
                     taskCount++;
+                    System.out.println("Now you have " + taskCount + " tasks in the list.");
+                    System.out.println(line);
                 } else {
                     throw new UltronException("INVALID INPUT");
                 }

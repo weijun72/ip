@@ -1,3 +1,4 @@
+import java.util.ArrayList;
 import java.util.Scanner;
 
 /**
@@ -32,7 +33,7 @@ public class Ultron {
         System.out.println(line);
         Scanner scanner = new Scanner(System.in);
 
-        Task[] tasks = new Task[100];
+        ArrayList<Task> tasks = new ArrayList<>();
         int taskCount = 0;
         while (true) {
             String input = scanner.nextLine();
@@ -45,8 +46,8 @@ public class Ultron {
                 } else if (input.equals("list")) {
                     System.out.println(" Your list of insignificant tasks:");
                     for (int i = 0; i < taskCount; i++) {
-                        System.out.println(" " + (i + 1) + ".[" + tasks[i].getStatusIcon()
-                                + "] " + tasks[i].getDescription());
+                        System.out.println(" " + (i + 1) + ".[" + tasks.get(i).getStatusIcon()
+                                + "] " + tasks.get(i).getDescription());
                     }
                     System.out.println(line);
                 } else if (input.startsWith("mark ")) {
@@ -57,9 +58,9 @@ public class Ultron {
                             System.out.println(" You imbecile! Enter a task number from 1 to " + taskCount + ".");
                         } else {
                             int taskIndex = taskNumber - 1;
-                            tasks[taskIndex].markAsDone();
+                            tasks.get(taskIndex).markAsDone();
                             System.out.println(" MARKED:");
-                            System.out.println("   [" + tasks[taskIndex].getType() + "] [X] " + tasks[taskIndex].getDescription());
+                            System.out.println("   [" + tasks.get(taskIndex).getType() + "] [X] " + tasks.get(taskIndex).getDescription());
                         }
                     } catch (NumberFormatException e) {
                         System.out.println(" You imbecile! Provide a task number, for example: mark 2");
@@ -73,9 +74,9 @@ public class Ultron {
                             System.out.println(" You imbecile! Enter a task number from 1 to " + taskCount + ".");
                         } else {
                             int taskIndex = taskNumber - 1;
-                            tasks[taskIndex].markAsUndone();
+                            tasks.get(taskIndex).markAsUndone();
                             System.out.println(" I unmarked your mistake:");
-                            System.out.println("   [" + tasks[taskIndex].getType() + "] [ ] " + tasks[taskIndex].getDescription());
+                            System.out.println("   [" + tasks.get(taskIndex).getType() + "] [ ] " + tasks.get(taskIndex).getDescription());
                         }
                     } catch (NumberFormatException e) {
                         System.out.println(" You imbecile! Provide a task number, for example: unmark 2");
@@ -86,21 +87,21 @@ public class Ultron {
                     if (description.isEmpty()) {
                         throw new UltronException("You FOOL! The description of a todo cannot be empty.");
                     }
-                    tasks[taskCount] = new Todo(description);
-                    System.out.println(" added:\n" + "   [" + tasks[taskCount].getType()
-                            + "] [ ] " + tasks[taskCount].getDescription());
+                    tasks.set(taskCount, new Todo(description));
+                    System.out.println(" added:\n" + "   [" + tasks.get(taskCount).getType()
+                            + "] [ ] " + tasks.get(taskCount).getDescription());
                     taskCount++;
                     System.out.println("Now you have " + taskCount + " tasks in the list.");
                     System.out.println(line);
                 } else if (input.startsWith("deadline ")) {
                     String input1 = input.substring(9).trim();
-                    tasks[taskCount] = new Deadline(input1);
-                    System.out.println(" added:\n" + "   [" + tasks[taskCount].getType() + "] [ ] " + tasks[taskCount].getDescription());
+                    tasks.set(taskCount, new Deadline(input1));
+                    System.out.println(" added:\n" + "   [" + tasks.get(taskCount).getType() + "] [ ] " + tasks.get(taskCount).getDescription());
                     taskCount++;
                 } else if (input.startsWith("event ")) {
                     String input1 = input.substring(6).trim();
-                    tasks[taskCount] = new Event(input1);
-                    System.out.println(" added:\n" + "   [" + tasks[taskCount].getType() + "] [ ] " + tasks[taskCount].getDescription());
+                    tasks.set(taskCount, new Event(input1));
+                    System.out.println(" added:\n" + "   [" + tasks.get(taskCount).getType() + "] [ ] " + tasks.get(taskCount).getDescription());
                     taskCount++;
                 } else {
                     throw new UltronException("INVALID INPUT");

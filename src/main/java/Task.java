@@ -4,16 +4,19 @@
 public class Task {
     protected String description;
     protected boolean isDone;
+    protected TaskType type;
 
 
     /**
      * Creates an incomplete task with the given description.
      *
      * @param description the task description
+     * @param type the category of task
      */
-    public Task(String description) {
+    public Task(String description, TaskType type) {
         this.description = description;
         this.isDone = false;
+        this.type = type;
     }
 
     /**
@@ -48,6 +51,13 @@ public class Task {
         return description;
     }
 
-    public char getType() { return 'T'; }
+    /**
+     * Returns this task's category.
+     *
+     * @return this task's type
+     */
+    public TaskType getType() {
+        return type;
+    }
 
 }

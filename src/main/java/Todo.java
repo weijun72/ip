@@ -1,14 +1,5 @@
 public class Todo extends Task {
-    protected char type;
     public Todo(String description) {
-        super(description);
-        this.type = 'T';
+        super(description, TaskType.TODO);
     }
-
-    @Override
-    public char getType() {
-        return this.type;
-    }
-
-
 }

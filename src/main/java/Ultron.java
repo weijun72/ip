@@ -93,9 +93,8 @@ public class Ultron {
                         } else {
                             int taskIndex = taskNumber - 1;
                             System.out.println(" DELETED:");
-                            System.out.println("   [" + tasks.get(taskIndex).getType().getSymbol()
+                            System.out.println("   [" + tasks.remove(taskIndex).getType().getSymbol()
                                     + "] [ ] " + tasks.get(taskIndex).getDescription());
-                            tasks.remove(taskIndex);
                             storage.saveTasks(tasks.getTasks());
                             System.out.println("Now you have " + tasks.size() + " tasks in the list.");
                             System.out.println(line);

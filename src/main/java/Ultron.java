@@ -1,3 +1,7 @@
+import java.io.IOException;
+import java.nio.charset.StandardCharsets;
+import java.nio.file.Files;
+import java.nio.file.Path;
 import java.util.ArrayList;
 import java.util.Scanner;
 
@@ -6,6 +10,7 @@ import java.util.Scanner;
  */
 public class Ultron {
 
+    private static final Path SAVE_FILE = Path.of("data", "ultron.txt");
 
     public static final String RESET = "\u001B[0m";
     public static final String BOLD = "\u001B[1m";
@@ -59,6 +64,7 @@ public class Ultron {
                         } else {
                             int taskIndex = taskNumber - 1;
                             tasks.get(taskIndex).markAsDone();
+                            saveTasks(tasks);
                             System.out.println(" MARKED:");
                             System.out.println("   [" + tasks.get(taskIndex).getType().getSymbol()
                                     + "] [X] " + tasks.get(taskIndex).getDescription());
@@ -76,6 +82,7 @@ public class Ultron {
                         } else {
                             int taskIndex = taskNumber - 1;
                             tasks.get(taskIndex).markAsUndone();
+                            saveTasks(tasks);
                             System.out.println(" I unmarked your mistake:");
                             System.out.println("   [" + tasks.get(taskIndex).getType().getSymbol()
                                     + "] [ ] " + tasks.get(taskIndex).getDescription());
@@ -97,6 +104,7 @@ public class Ultron {
                                     + "] [ ] " + tasks.get(taskIndex).getDescription());
                             tasks.remove(taskIndex);
                             taskCount -= 1;
+                            saveTasks(tasks);
                             System.out.println("Now you have " + taskCount + " tasks in the list.");
                             System.out.println(line);
                         }
@@ -110,6 +118,7 @@ public class Ultron {
                         throw new UltronException("You FOOL! The description of a todo cannot be empty.");
                     }
                     tasks.add(new Todo(description));
+                    saveTasks(tasks);
                     System.out.println(" added:\n" + "   [" + tasks.get(taskCount).getType().getSymbol()
                             + "] [ ] " + tasks.get(taskCount).getDescription());
                     taskCount++;
@@ -118,6 +127,7 @@ public class Ultron {
                 } else if (input.startsWith("deadline ")) {
                     String input1 = input.substring(9).trim();
                     tasks.add(new Deadline(input1));
+                    saveTasks(tasks);
                     System.out.println(" added:\n" + "   [" + tasks.get(taskCount).getType().getSymbol()
                             + "] [ ] " + tasks.get(taskCount).getDescription());
                     taskCount++;
@@ -126,6 +136,7 @@ public class Ultron {
                 } else if (input.startsWith("event ")) {
                     String input1 = input.substring(6).trim();
                     tasks.add(new Event(input1));
+                    saveTasks(tasks);
                     System.out.println(" added:\n" + "   [" + tasks.get(taskCount).getType().getSymbol()
                             + "] [ ] " + tasks.get(taskCount).getDescription());
                     taskCount++;
@@ -140,5 +151,26 @@ public class Ultron {
             }
         }
         scanner.close();
+    }
+
+    /**
+     * Writes the current task list to the application's data file.
+     *
+     * @param tasks the tasks to save
+     */
+    private static void saveTasks(ArrayList<Task> tasks) {
+        ArrayList<String> taskLines = new ArrayList<>();
+        for (Task task : tasks) {
+            String taskLine = task.getType().getSymbol() + " | " + (task.isDone() ? "1" : "0")
+                    + " | " + task.getDescription();
+            taskLines.add(taskLine);
+        }
+
+        try {
+            Files.createDirectories(SAVE_FILE.getParent());
+            Files.write(SAVE_FILE, taskLines, StandardCharsets.UTF_8);
+        } catch (IOException e) {
+            System.out.println(" OOPS!!! I could not save your tasks.");
+        }
     }
 }

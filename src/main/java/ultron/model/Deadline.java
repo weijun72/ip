@@ -1,6 +1,10 @@
+package ultron.model;
+
 import java.time.LocalDate;
 import java.time.format.DateTimeFormatter;
 import java.time.format.DateTimeParseException;
+
+import ultron.exception.UltronException;
 
 public class Deadline extends Task {
     protected LocalDate date;

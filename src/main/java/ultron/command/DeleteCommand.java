@@ -1,15 +1,22 @@
+package ultron.command;
+
+import ultron.model.Task;
+import ultron.model.TaskList;
+import ultron.storage.Storage;
+import ultron.ui.Ui;
+
 /**
- * Marks a numbered task as done.
+ * Removes a numbered task from the task list.
  */
-public class MarkCommand extends Command {
+public class DeleteCommand extends Command {
     private final String taskNumberText;
 
     /**
-     * Creates a mark command with its task-number argument.
+     * Creates a delete command with its task-number argument.
      *
      * @param taskNumberText the task number supplied by the user
      */
-    public MarkCommand(String taskNumberText) {
+    public DeleteCommand(String taskNumberText) {
         this.taskNumberText = taskNumberText;
     }
 
@@ -20,13 +27,14 @@ public class MarkCommand extends Command {
             if (taskNumber < 1 || taskNumber > tasks.size()) {
                 ui.showInvalidTaskNumber(tasks.size());
             } else {
-                Task task = tasks.get(taskNumber - 1);
-                task.markAsDone();
+                Task deletedTask = tasks.remove(taskNumber - 1);
+                ui.showTaskDeleted(deletedTask);
                 storage.saveTasks(tasks.getTasks());
-                ui.showTaskMarked(task);
+                ui.showTaskCount(tasks.size());
+                ui.showSeparator();
             }
         } catch (NumberFormatException e) {
-            ui.showInvalidTaskNumberFormat("mark");
+            ui.showInvalidTaskNumberFormat("delete");
         }
         ui.showSeparator();
     }

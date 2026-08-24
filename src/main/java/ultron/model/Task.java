@@ -1,3 +1,5 @@
+package ultron.model;
+
 /**
  * Represents one task and whether it has been completed.
  */

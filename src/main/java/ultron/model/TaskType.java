@@ -1,3 +1,5 @@
+package ultron.model;
+
 /**
  * The supported categories of tasks and their display symbols.
  */

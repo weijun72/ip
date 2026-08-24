@@ -2,6 +2,9 @@ import java.io.IOException;
 import java.nio.charset.StandardCharsets;
 import java.nio.file.Files;
 import java.nio.file.Path;
+import java.time.LocalDate;
+import java.time.format.DateTimeFormatter;
+import java.time.format.DateTimeParseException;
 import java.util.ArrayList;
 import java.util.Scanner;
 
@@ -237,8 +240,20 @@ public class Ultron {
             throw new UltronException("Invalid saved deadline");
         }
         String description = savedDescription.substring(0, deadlineStart);
-        String deadline = savedDescription.substring(deadlineStart + 6, savedDescription.length() - 1);
-        return new Deadline(description + " /by " + deadline);
+        String[] deadline = savedDescription.substring(deadlineStart + 6, savedDescription.length() - 1).split(" ");
+        String time = "";
+        if (deadline.length == 2) {
+            time = " " + deadline[1];
+        }
+        LocalDate date;
+        try {
+            date = LocalDate.parse(deadline[0], DateTimeFormatter.ofPattern("d/MMM/yyyy"));
+        } catch (DateTimeParseException e) {
+            System.out.println("Invalid date format: " + deadline[0] );
+            throw new UltronException("Invalid saved deadline:" + deadline[0]);
+        }
+
+        return new Deadline(description + " /by " + date.format(DateTimeFormatter.ofPattern("d/MM/yyyy")) + time);
     }
 
     /**

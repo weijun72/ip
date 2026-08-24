@@ -20,10 +20,10 @@ public class Ultron {
             String input = ui.readCommand();
 
             try {
-                Command simpleCommand = parser.parseSimpleCommand(input);
-                if (simpleCommand != null) {
-                    simpleCommand.execute(tasks, ui, storage);
-                    if (simpleCommand.isExit()) {
+                Command commandObject = parser.parseCommandObject(input);
+                if (commandObject != null) {
+                    commandObject.execute(tasks, ui, storage);
+                    if (commandObject.isExit()) {
                         ui.close();
                         return;
                     }
@@ -32,38 +32,6 @@ public class Ultron {
 
                 Parser.CommandType command = parser.parseCommand(input);
                 switch (command) {
-                case MARK:
-                    try {
-                        int taskNumber = parser.parseTaskNumber(input, command);
-                        if (taskNumber < 1 || taskNumber > tasks.size()) {
-                            ui.showInvalidTaskNumber(tasks.size());
-                        } else {
-                            int taskIndex = taskNumber - 1;
-                            tasks.get(taskIndex).markAsDone();
-                            storage.saveTasks(tasks.getTasks());
-                            ui.showTaskMarked(tasks.get(taskIndex));
-                        }
-                    } catch (NumberFormatException e) {
-                        ui.showInvalidTaskNumberFormat("mark");
-                    }
-                    ui.showSeparator();
-                    break;
-                case UNMARK:
-                    try {
-                        int taskNumber = parser.parseTaskNumber(input, command);
-                        if (taskNumber < 1 || taskNumber > tasks.size()) {
-                            ui.showInvalidTaskNumber(tasks.size());
-                        } else {
-                            int taskIndex = taskNumber - 1;
-                            tasks.get(taskIndex).markAsUndone();
-                            storage.saveTasks(tasks.getTasks());
-                            ui.showTaskUnmarked(tasks.get(taskIndex));
-                        }
-                    } catch (NumberFormatException e) {
-                        ui.showInvalidTaskNumberFormat("unmark");
-                    }
-                    ui.showSeparator();
-                    break;
                 case DELETE:
                     try {
                         int taskNumber = parser.parseTaskNumber(input, command);
@@ -113,6 +81,8 @@ public class Ultron {
                     throw new UltronException("INVALID INPUT");
                 case BYE:
                 case LIST:
+                case MARK:
+                case UNMARK:
                     throw new UltronException("Invalid command");
                 }
             } catch (UltronException e) {

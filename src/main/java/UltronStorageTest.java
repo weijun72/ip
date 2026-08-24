@@ -45,7 +45,7 @@ public class UltronStorageTest {
                 "T | 0 | read book",
                 "D | 0 | return book( by: Friday)");
         List<String> actualLines = Files.readAllLines(testSaveFile, StandardCharsets.UTF_8);
-        Files.deleteIfExists(testSaveFile);
+
 
         if (!actualLines.equals(expectedLines)) {
             throw new AssertionError("Unexpected saved tasks: " + actualLines);

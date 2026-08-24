@@ -6,6 +6,7 @@ import java.time.LocalDate;
 import java.time.format.DateTimeFormatter;
 import java.time.format.DateTimeParseException;
 import java.util.ArrayList;
+import java.util.List;
 
 /**
  * Saves tasks to, and loads tasks from, the application's data file.
@@ -27,7 +28,7 @@ public class Storage {
      *
      * @param tasks the tasks to save
      */
-    public void saveTasks(ArrayList<Task> tasks) {
+    public void saveTasks(List<Task> tasks) {
         ArrayList<String> taskLines = new ArrayList<>();
         for (Task task : tasks) {
             String taskLine = task.getType().getSymbol() + " | " + (task.isDone() ? "1" : "0")

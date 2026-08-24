@@ -38,8 +38,8 @@ public class Ultron {
         System.out.println(line);
         Scanner scanner = new Scanner(System.in);
 
-        ArrayList<Task> tasks = new ArrayList<>(100);
-        int taskCount = 0;
+        ArrayList<Task> tasks = loadTasks();
+        int taskCount = tasks.size();
         while (true) {
             String input = scanner.nextLine();
 
@@ -172,5 +172,91 @@ public class Ultron {
         } catch (IOException e) {
             System.out.println(" OOPS!!! I could not save your tasks.");
         }
+    }
+
+    /**
+     * Loads previously saved tasks from the application's data file.
+     * Missing data is treated as an empty task list so the chatbot can be
+     * used for the first time without any setup.
+     *
+     * @return the tasks restored from storage
+     */
+    private static ArrayList<Task> loadTasks() {
+        ArrayList<Task> tasks = new ArrayList<>();
+        if (!Files.exists(SAVE_FILE)) {
+            return tasks;
+        }
+
+        try {
+            for (String taskLine : Files.readAllLines(SAVE_FILE, StandardCharsets.UTF_8)) {
+                Task task = createTaskFromSavedLine(taskLine);
+                tasks.add(task);
+            }
+        } catch (IOException | UltronException e) {
+            System.out.println(" OOPS!!! I could not load your saved tasks.");
+        }
+        return tasks;
+    }
+
+    /**
+     * Recreates one task from a line produced by {@link #saveTasks(ArrayList)}.
+     *
+     * @param taskLine one line in the saved task file
+     * @return the restored task
+     * @throws UltronException if the saved line does not follow the expected format
+     */
+    private static Task createTaskFromSavedLine(String taskLine) throws UltronException {
+        String[] parts = taskLine.split(" \\| ", 3);
+        if (parts.length != 3) {
+            throw new UltronException("Invalid saved task");
+        }
+
+        Task task = switch (parts[0]) {
+            case "T" -> new Todo(parts[2]);
+            case "D" -> createSavedDeadline(parts[2]);
+            case "E" -> createSavedEvent(parts[2]);
+            default -> throw new UltronException("Invalid saved task type");
+        };
+
+        if (parts[1].equals("1")) {
+            task.markAsDone();
+        }
+        return task;
+    }
+
+    /**
+     * Rebuilds a deadline task from its saved display description.
+     *
+     * @param savedDescription the description stored in the task file
+     * @return the restored deadline task
+     * @throws UltronException if the saved description is invalid
+     */
+    private static Deadline createSavedDeadline(String savedDescription) throws UltronException {
+        int deadlineStart = savedDescription.lastIndexOf("( by: ");
+        if (deadlineStart == -1 || !savedDescription.endsWith(")")) {
+            throw new UltronException("Invalid saved deadline");
+        }
+        String description = savedDescription.substring(0, deadlineStart);
+        String deadline = savedDescription.substring(deadlineStart + 6, savedDescription.length() - 1);
+        return new Deadline(description + " /by " + deadline);
+    }
+
+    /**
+     * Rebuilds an event task from its saved display description.
+     *
+     * @param savedDescription the description stored in the task file
+     * @return the restored event task
+     * @throws UltronException if the saved description is invalid
+     */
+    private static Event createSavedEvent(String savedDescription) throws UltronException {
+        int startTime = savedDescription.lastIndexOf("( from: ");
+        int endTime = savedDescription.lastIndexOf(" to: ");
+        if (startTime == -1 || endTime == -1 || endTime <= startTime || !savedDescription.endsWith(")")) {
+            throw new UltronException("Invalid saved event");
+        }
+        String description = savedDescription.substring(0, startTime);
+        String start = savedDescription.substring(startTime + 8, endTime);
+        String end = savedDescription.substring(endTime + 5, savedDescription.length() - 1);
+        return new Event(description + " /from " + start + " /to " + end);
     }
 }

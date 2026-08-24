@@ -32,24 +32,6 @@ public class Ultron {
 
                 Parser.CommandType command = parser.parseCommand(input);
                 switch (command) {
-                case DELETE:
-                    try {
-                        int taskNumber = parser.parseTaskNumber(input, command);
-                        if (taskNumber < 1 || taskNumber > tasks.size()) {
-                            ui.showInvalidTaskNumber(tasks.size());
-                        } else {
-                            int taskIndex = taskNumber - 1;
-                            Task deletedTask = tasks.remove(taskIndex);
-                            ui.showTaskDeleted(deletedTask);
-                            storage.saveTasks(tasks.getTasks());
-                            ui.showTaskCount(tasks.size());
-                            ui.showSeparator();
-                        }
-                    } catch (NumberFormatException e) {
-                        ui.showInvalidTaskNumberFormat("delete");
-                    }
-                    ui.showSeparator();
-                    break;
                 case TODO:
                     String description = parser.getArgument(input, command);
                     if (description.isEmpty()) {
@@ -83,6 +65,7 @@ public class Ultron {
                 case LIST:
                 case MARK:
                 case UNMARK:
+                case DELETE:
                     throw new UltronException("Invalid command");
                 }
             } catch (UltronException e) {

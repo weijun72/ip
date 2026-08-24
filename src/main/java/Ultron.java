@@ -14,6 +14,7 @@ public class Ultron {
 
         Ui ui = new Ui();
         ui.showWelcome();
+        Parser parser = new Parser();
         Scanner scanner = new Scanner(System.in);
 
         Storage storage = new Storage(System.getProperty("ultron.saveFile", "data/ultron.txt"));
@@ -22,15 +23,18 @@ public class Ultron {
             String input = scanner.nextLine();
 
             try {
-                if (input.equals("bye")) {
+                Parser.Command command = parser.parseCommand(input);
+                switch (command) {
+                case BYE:
                     ui.showGoodbye();
-                    break;
-                } else if (input.equals("list")) {
+                    scanner.close();
+                    return;
+                case LIST:
                     ui.showTaskList(tasks);
-                } else if (input.startsWith("mark ")) {
-                    String taskNumberText = input.substring(5).trim();
+                    break;
+                case MARK:
                     try {
-                        int taskNumber = Integer.parseInt(taskNumberText);
+                        int taskNumber = parser.parseTaskNumber(input, command);
                         if (taskNumber < 1 || taskNumber > tasks.size()) {
                             ui.showInvalidTaskNumber(tasks.size());
                         } else {
@@ -43,10 +47,10 @@ public class Ultron {
                         ui.showInvalidTaskNumberFormat("mark");
                     }
                     ui.showSeparator();
-                } else if (input.startsWith("unmark ")) {
-                    String taskNumberText = input.substring(7).trim();
+                    break;
+                case UNMARK:
                     try {
-                        int taskNumber = Integer.parseInt(taskNumberText);
+                        int taskNumber = parser.parseTaskNumber(input, command);
                         if (taskNumber < 1 || taskNumber > tasks.size()) {
                             ui.showInvalidTaskNumber(tasks.size());
                         } else {
@@ -59,10 +63,10 @@ public class Ultron {
                         ui.showInvalidTaskNumberFormat("unmark");
                     }
                     ui.showSeparator();
-                } else if (input.startsWith("delete ")) {
-                    String taskNumberText = input.substring(7).trim();
+                    break;
+                case DELETE:
                     try {
-                        int taskNumber = Integer.parseInt(taskNumberText);
+                        int taskNumber = parser.parseTaskNumber(input, command);
                         if (taskNumber < 1 || taskNumber > tasks.size()) {
                             ui.showInvalidTaskNumber(tasks.size());
                         } else {
@@ -77,8 +81,9 @@ public class Ultron {
                         ui.showInvalidTaskNumberFormat("delete");
                     }
                     ui.showSeparator();
-                } else if (input.equals("todo") || input.startsWith("todo ")) {
-                    String description = input.substring(4).trim();
+                    break;
+                case TODO:
+                    String description = parser.getArgument(input, command);
                     if (description.isEmpty()) {
                         throw new UltronException("You FOOL! The description of a todo cannot be empty.");
                     }
@@ -87,28 +92,30 @@ public class Ultron {
                     ui.showTaskAdded(tasks.get(tasks.size() - 1));
                     ui.showTaskCount(tasks.size());
                     ui.showSeparator();
-                } else if (input.startsWith("deadline ")) {
-                    String input1 = input.substring(9).trim();
+                    break;
+                case DEADLINE:
+                    String input1 = parser.getArgument(input, command);
                     tasks.add(new Deadline(input1));
                     storage.saveTasks(tasks.getTasks());
                     ui.showTaskAdded(tasks.get(tasks.size() - 1));
                     ui.showTaskCount(tasks.size());
                     ui.showSeparator();
-                } else if (input.startsWith("event ")) {
-                    String input1 = input.substring(6).trim();
-                    tasks.add(new Event(input1));
+                    break;
+                case EVENT:
+                    String eventDetails = parser.getArgument(input, command);
+                    tasks.add(new Event(eventDetails));
                     storage.saveTasks(tasks.getTasks());
                     ui.showTaskAdded(tasks.get(tasks.size() - 1));
                     ui.showTaskCount(tasks.size());
                     ui.showSeparator();
-                } else {
+                    break;
+                case UNKNOWN:
                     throw new UltronException("INVALID INPUT");
                 }
             } catch (UltronException e) {
                 ui.showError(e.getMessage());
             }
         }
-        scanner.close();
     }
 
 }

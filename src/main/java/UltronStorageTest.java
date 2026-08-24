@@ -8,7 +8,7 @@ import java.nio.file.Path;
 import java.util.List;
 
 /**
- * Exercises task-list changes and verifies that they are written to storage.
+ * Exercises writing tasks to storage and restoring them on the next startup.
  */
 public class UltronStorageTest {
     /**
@@ -50,5 +50,34 @@ public class UltronStorageTest {
         if (!actualLines.equals(expectedLines)) {
             throw new AssertionError("Unexpected saved tasks: " + actualLines);
         }
+
+        String restoredOutput = runUltron("list\nbye\n");
+        Files.deleteIfExists(testSaveFile);
+        if (!restoredOutput.contains("1.[T] [ ] read book")
+                || !restoredOutput.contains("2.[D] [ ] return book( by: Friday)")) {
+            throw new AssertionError("Tasks were not restored: " + restoredOutput);
+        }
+    }
+
+    /**
+     * Runs the chatbot with the supplied commands and captures its output.
+     *
+     * @param commands newline-separated chatbot commands
+     * @return the chatbot output
+     */
+    private static String runUltron(String commands) {
+        InputStream originalInput = System.in;
+        PrintStream originalOutput = System.out;
+        OutputStream capturedOutput = new java.io.ByteArrayOutputStream();
+
+        try {
+            System.setIn(new ByteArrayInputStream(commands.getBytes(StandardCharsets.UTF_8)));
+            System.setOut(new PrintStream(capturedOutput));
+            Ultron.main(new String[0]);
+        } finally {
+            System.setIn(originalInput);
+            System.setOut(originalOutput);
+        }
+        return capturedOutput.toString();
     }
 }

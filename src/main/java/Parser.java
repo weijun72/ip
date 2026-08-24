@@ -36,15 +36,18 @@ public class Parser {
     }
 
     /**
-     * Creates a command object for the simple commands migrated to the command pattern.
+     * Creates a command object for each command migrated to the command pattern.
      *
      * @param input the raw user input
      * @return an executable command, or {@code null} when the command is not migrated yet
      */
-    public Command parseSimpleCommand(String input) {
-        return switch (parseCommand(input)) {
+    public Command parseCommandObject(String input) {
+        CommandType commandType = parseCommand(input);
+        return switch (commandType) {
         case BYE -> new ExitCommand();
         case LIST -> new ListCommand();
+        case MARK -> new MarkCommand(getArgument(input, commandType));
+        case UNMARK -> new UnmarkCommand(getArgument(input, commandType));
         default -> null;
         };
     }

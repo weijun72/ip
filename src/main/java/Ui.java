@@ -1,3 +1,5 @@
+import java.util.Scanner;
+
 /**
  * Handles all console input and output shown to the chatbot user.
  */
@@ -6,6 +8,26 @@ public class Ui {
     private static final String RESET = "\u001B[0m";
     private static final String BOLD = "\u001B[1m";
     private static final String BRIGHT_RED = "\u001B[91m";
+    private final Scanner scanner;
+
+    /** Creates a user interface that reads commands from standard input. */
+    public Ui() {
+        scanner = new Scanner(System.in);
+    }
+
+    /**
+     * Reads one command entered by the user.
+     *
+     * @return the entered command
+     */
+    public String readCommand() {
+        return scanner.nextLine();
+    }
+
+    /** Closes the input reader when the chatbot exits. */
+    public void close() {
+        scanner.close();
+    }
 
     /** Displays the chatbot greeting. */
     public void showWelcome() {

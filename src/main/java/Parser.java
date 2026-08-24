@@ -4,7 +4,7 @@
 public class Parser {
 
     /** Supported commands that can be entered by the user. */
-    public enum Command {
+    public enum CommandType {
         BYE, LIST, MARK, UNMARK, DELETE, TODO, DEADLINE, EVENT, UNKNOWN
     }
 
@@ -14,25 +14,39 @@ public class Parser {
      * @param input the raw user input
      * @return the matching command, or {@code UNKNOWN} when no command matches
      */
-    public Command parseCommand(String input) {
+    public CommandType parseCommand(String input) {
         if (input.equals("bye")) {
-            return Command.BYE;
+            return CommandType.BYE;
         } else if (input.equals("list")) {
-            return Command.LIST;
+            return CommandType.LIST;
         } else if (input.startsWith("mark ")) {
-            return Command.MARK;
+            return CommandType.MARK;
         } else if (input.startsWith("unmark ")) {
-            return Command.UNMARK;
+            return CommandType.UNMARK;
         } else if (input.startsWith("delete ")) {
-            return Command.DELETE;
+            return CommandType.DELETE;
         } else if (input.equals("todo") || input.startsWith("todo ")) {
-            return Command.TODO;
+            return CommandType.TODO;
         } else if (input.startsWith("deadline ")) {
-            return Command.DEADLINE;
+            return CommandType.DEADLINE;
         } else if (input.startsWith("event ")) {
-            return Command.EVENT;
+            return CommandType.EVENT;
         }
-        return Command.UNKNOWN;
+        return CommandType.UNKNOWN;
+    }
+
+    /**
+     * Creates a command object for the simple commands migrated to the command pattern.
+     *
+     * @param input the raw user input
+     * @return an executable command, or {@code null} when the command is not migrated yet
+     */
+    public Command parseSimpleCommand(String input) {
+        return switch (parseCommand(input)) {
+        case BYE -> new ExitCommand();
+        case LIST -> new ListCommand();
+        default -> null;
+        };
     }
 
     /**
@@ -42,7 +56,7 @@ public class Parser {
      * @param command the command already identified from the input
      * @return the trimmed argument text
      */
-    public String getArgument(String input, Command command) {
+    public String getArgument(String input, CommandType command) {
         return input.substring(getCommandWord(command).length()).trim();
     }
 
@@ -54,11 +68,11 @@ public class Parser {
      * @return the parsed task number
      * @throws NumberFormatException if the argument is not a whole number
      */
-    public int parseTaskNumber(String input, Command command) {
+    public int parseTaskNumber(String input, CommandType command) {
         return Integer.parseInt(getArgument(input, command));
     }
 
-    private String getCommandWord(Command command) {
+    private String getCommandWord(CommandType command) {
         return switch (command) {
         case BYE -> "bye";
         case LIST -> "list";

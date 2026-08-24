@@ -10,7 +10,7 @@ import java.util.Scanner;
  */
 public class Ultron {
 
-    private static final Path SAVE_FILE = Path.of("data", "ultron.txt");
+    private static final Path SAVE_FILE = Path.of(System.getProperty("ultron.saveFile", "data/ultron.txt"));
 
     public static final String RESET = "\u001B[0m";
     public static final String BOLD = "\u001B[1m";

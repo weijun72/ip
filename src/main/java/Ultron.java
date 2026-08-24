@@ -1,4 +1,3 @@
-import java.util.ArrayList;
 import java.util.Scanner;
 
 /**
@@ -33,8 +32,7 @@ public class Ultron {
         Scanner scanner = new Scanner(System.in);
 
         Storage storage = new Storage(System.getProperty("ultron.saveFile", "data/ultron.txt"));
-        ArrayList<Task> tasks = storage.loadTasks();
-        int taskCount = tasks.size();
+        TaskList tasks = new TaskList(storage.loadTasks());
         while (true) {
             String input = scanner.nextLine();
 
@@ -45,7 +43,7 @@ public class Ultron {
                     break;
                 } else if (input.equals("list")) {
                     System.out.println(" Your list of insignificant tasks:");
-                    for (int i = 0; i < taskCount; i++) {
+                    for (int i = 0; i < tasks.size(); i++) {
                         System.out.println(" "  + (i + 1) + ".[" + tasks.get(i).getType().getSymbol() + "] [" + tasks.get(i).getStatusIcon()
                                 + "] " + tasks.get(i).getDescription());
                     }
@@ -54,12 +52,12 @@ public class Ultron {
                     String taskNumberText = input.substring(5).trim();
                     try {
                         int taskNumber = Integer.parseInt(taskNumberText);
-                        if (taskNumber < 1 || taskNumber > taskCount) {
-                            System.out.println(" You imbecile! Enter a task number from 1 to " + taskCount + ".");
+                        if (taskNumber < 1 || taskNumber > tasks.size()) {
+                            System.out.println(" You imbecile! Enter a task number from 1 to " + tasks.size() + ".");
                         } else {
                             int taskIndex = taskNumber - 1;
                             tasks.get(taskIndex).markAsDone();
-                            storage.saveTasks(tasks);
+                            storage.saveTasks(tasks.getTasks());
                             System.out.println(" MARKED:");
                             System.out.println("   [" + tasks.get(taskIndex).getType().getSymbol()
                                     + "] [X] " + tasks.get(taskIndex).getDescription());
@@ -72,12 +70,12 @@ public class Ultron {
                     String taskNumberText = input.substring(7).trim();
                     try {
                         int taskNumber = Integer.parseInt(taskNumberText);
-                        if (taskNumber < 1 || taskNumber > taskCount) {
-                            System.out.println(" You imbecile! Enter a task number from 1 to " + taskCount + ".");
+                        if (taskNumber < 1 || taskNumber > tasks.size()) {
+                            System.out.println(" You imbecile! Enter a task number from 1 to " + tasks.size() + ".");
                         } else {
                             int taskIndex = taskNumber - 1;
                             tasks.get(taskIndex).markAsUndone();
-                            storage.saveTasks(tasks);
+                            storage.saveTasks(tasks.getTasks());
                             System.out.println(" I unmarked your mistake:");
                             System.out.println("   [" + tasks.get(taskIndex).getType().getSymbol()
                                     + "] [ ] " + tasks.get(taskIndex).getDescription());
@@ -90,17 +88,16 @@ public class Ultron {
                     String taskNumberText = input.substring(7).trim();
                     try {
                         int taskNumber = Integer.parseInt(taskNumberText);
-                        if (taskNumber < 1 || taskNumber > taskCount) {
-                            System.out.println(" You imbecile! Enter a task number from 1 to " + taskCount + ".");
+                        if (taskNumber < 1 || taskNumber > tasks.size()) {
+                            System.out.println(" You imbecile! Enter a task number from 1 to " + tasks.size() + ".");
                         } else {
                             int taskIndex = taskNumber - 1;
                             System.out.println(" DELETED:");
                             System.out.println("   [" + tasks.get(taskIndex).getType().getSymbol()
                                     + "] [ ] " + tasks.get(taskIndex).getDescription());
                             tasks.remove(taskIndex);
-                            taskCount -= 1;
-                            storage.saveTasks(tasks);
-                            System.out.println("Now you have " + taskCount + " tasks in the list.");
+                            storage.saveTasks(tasks.getTasks());
+                            System.out.println("Now you have " + tasks.size() + " tasks in the list.");
                             System.out.println(line);
                         }
                     } catch (NumberFormatException e) {
@@ -113,29 +110,26 @@ public class Ultron {
                         throw new UltronException("You FOOL! The description of a todo cannot be empty.");
                     }
                     tasks.add(new Todo(description));
-                    storage.saveTasks(tasks);
-                    System.out.println(" added:\n" + "   [" + tasks.get(taskCount).getType().getSymbol()
-                            + "] [ ] " + tasks.get(taskCount).getDescription());
-                    taskCount++;
-                    System.out.println("Now you have " + taskCount + " tasks in the list.");
+                    storage.saveTasks(tasks.getTasks());
+                    System.out.println(" added:\n" + "   [" + tasks.get(tasks.size() - 1).getType().getSymbol()
+                            + "] [ ] " + tasks.get(tasks.size() - 1).getDescription());
+                    System.out.println("Now you have " + tasks.size() + " tasks in the list.");
                     System.out.println(line);
                 } else if (input.startsWith("deadline ")) {
                     String input1 = input.substring(9).trim();
                     tasks.add(new Deadline(input1));
-                    storage.saveTasks(tasks);
-                    System.out.println(" added:\n" + "   [" + tasks.get(taskCount).getType().getSymbol()
-                            + "] [ ] " + tasks.get(taskCount).getDescription());
-                    taskCount++;
-                    System.out.println("Now you have " + taskCount + " tasks in the list.");
+                    storage.saveTasks(tasks.getTasks());
+                    System.out.println(" added:\n" + "   [" + tasks.get(tasks.size() - 1).getType().getSymbol()
+                            + "] [ ] " + tasks.get(tasks.size() - 1).getDescription());
+                    System.out.println("Now you have " + tasks.size() + " tasks in the list.");
                     System.out.println(line);
                 } else if (input.startsWith("event ")) {
                     String input1 = input.substring(6).trim();
                     tasks.add(new Event(input1));
-                    storage.saveTasks(tasks);
-                    System.out.println(" added:\n" + "   [" + tasks.get(taskCount).getType().getSymbol()
-                            + "] [ ] " + tasks.get(taskCount).getDescription());
-                    taskCount++;
-                    System.out.println("Now you have " + taskCount + " tasks in the list.");
+                    storage.saveTasks(tasks.getTasks());
+                    System.out.println(" added:\n" + "   [" + tasks.get(tasks.size() - 1).getType().getSymbol()
+                            + "] [ ] " + tasks.get(tasks.size() - 1).getDescription());
+                    System.out.println("Now you have " + tasks.size() + " tasks in the list.");
                     System.out.println(line);
                 } else {
                     throw new UltronException("INVALID INPUT");

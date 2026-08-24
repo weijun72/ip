@@ -1,5 +1,3 @@
-import java.util.Scanner;
-
 /**
  * A command-line task list that can add, list, mark, and unmark tasks.
  */
@@ -15,23 +13,25 @@ public class Ultron {
         Ui ui = new Ui();
         ui.showWelcome();
         Parser parser = new Parser();
-        Scanner scanner = new Scanner(System.in);
 
         Storage storage = new Storage(System.getProperty("ultron.saveFile", "data/ultron.txt"));
         TaskList tasks = new TaskList(storage.loadTasks());
         while (true) {
-            String input = scanner.nextLine();
+            String input = ui.readCommand();
 
             try {
-                Parser.Command command = parser.parseCommand(input);
+                Command simpleCommand = parser.parseSimpleCommand(input);
+                if (simpleCommand != null) {
+                    simpleCommand.execute(tasks, ui, storage);
+                    if (simpleCommand.isExit()) {
+                        ui.close();
+                        return;
+                    }
+                    continue;
+                }
+
+                Parser.CommandType command = parser.parseCommand(input);
                 switch (command) {
-                case BYE:
-                    ui.showGoodbye();
-                    scanner.close();
-                    return;
-                case LIST:
-                    ui.showTaskList(tasks);
-                    break;
                 case MARK:
                     try {
                         int taskNumber = parser.parseTaskNumber(input, command);
@@ -111,6 +111,9 @@ public class Ultron {
                     break;
                 case UNKNOWN:
                     throw new UltronException("INVALID INPUT");
+                case BYE:
+                case LIST:
+                    throw new UltronException("Invalid command");
                 }
             } catch (UltronException e) {
                 ui.showError(e.getMessage());

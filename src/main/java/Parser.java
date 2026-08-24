@@ -48,6 +48,7 @@ public class Parser {
         case LIST -> new ListCommand();
         case MARK -> new MarkCommand(getArgument(input, commandType));
         case UNMARK -> new UnmarkCommand(getArgument(input, commandType));
+        case DELETE -> new DeleteCommand(getArgument(input, commandType));
         default -> null;
         };
     }
@@ -61,18 +62,6 @@ public class Parser {
      */
     public String getArgument(String input, CommandType command) {
         return input.substring(getCommandWord(command).length()).trim();
-    }
-
-    /**
-     * Parses a task number supplied after a task-changing command.
-     *
-     * @param input the raw user input
-     * @param command the mark, unmark, or delete command
-     * @return the parsed task number
-     * @throws NumberFormatException if the argument is not a whole number
-     */
-    public int parseTaskNumber(String input, CommandType command) {
-        return Integer.parseInt(getArgument(input, command));
     }
 
     private String getCommandWord(CommandType command) {

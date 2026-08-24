@@ -1,3 +1,7 @@
+package ultron.model;
+
+import ultron.exception.UltronException;
+
 public class Event extends Task {
     protected String start;
     protected String end;

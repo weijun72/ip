@@ -1,3 +1,5 @@
+package ultron.exception;
+
 /**
  * Represents an input error that should be shown to the chatbot user.
  */

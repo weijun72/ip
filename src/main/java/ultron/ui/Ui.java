@@ -1,4 +1,9 @@
+package ultron.ui;
+
 import java.util.Scanner;
+
+import ultron.model.Task;
+import ultron.model.TaskList;
 
 /**
  * Handles all console input and output shown to the chatbot user.

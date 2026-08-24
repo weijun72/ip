@@ -1,3 +1,5 @@
+package ultron;
+
 import java.io.ByteArrayInputStream;
 import java.io.InputStream;
 import java.io.OutputStream;
@@ -25,7 +27,7 @@ public class UltronStorageTest {
         InputStream originalInput = System.in;
         PrintStream originalOutput = System.out;
         String commands = "todo read book\n"
-                + "deadline return book /by Friday\n"
+                + "deadline return book /by 2/12/2019\n"
                 + "event project meeting /from 2pm /to 3pm\n"
                 + "mark 2\n"
                 + "unmark 2\n"
@@ -43,7 +45,7 @@ public class UltronStorageTest {
 
         List<String> expectedLines = List.of(
                 "T | 0 | read book",
-                "D | 0 | return book( by: Friday)");
+                "D | 0 | return book( by: 02/Dec/2019 )");
         List<String> actualLines = Files.readAllLines(testSaveFile, StandardCharsets.UTF_8);
 
 
@@ -54,7 +56,7 @@ public class UltronStorageTest {
         String restoredOutput = runUltron("list\nbye\n");
         Files.deleteIfExists(testSaveFile);
         if (!restoredOutput.contains("1.[T] [ ] read book")
-                || !restoredOutput.contains("2.[D] [ ] return book( by: Friday)")) {
+                || !restoredOutput.contains("2.[D] [ ] return book( by: 02/Dec/2019 )")) {
             throw new AssertionError("Tasks were not restored: " + restoredOutput);
         }
     }

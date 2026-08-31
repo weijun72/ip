@@ -32,3 +32,15 @@ SE-EDU Java coding standard:
 ```
 ./gradlew checkstyleMain checkstyleTest
 ```
+
+## Running Ultron
+
+Start the JavaFX chat interface with:
+
+```
+./gradlew run
+```
+
+Enter task commands in the message box, such as `todo read book`,
+`deadline submit report /by Friday`, `event team meeting /from 2pm /to 3pm`,
+`list`, `find report`, `mark 1`, `unmark 1`, `delete 1`, and `bye`.

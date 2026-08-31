@@ -2,6 +2,7 @@ plugins {
     id 'java'
     id 'application'
     id 'checkstyle'
+    id 'org.openjfx.javafxplugin' version '0.1.0'
     id 'com.gradleup.shadow' version '9.5.1'
 }
 
@@ -12,6 +13,11 @@ checkstyle {
 java {
     sourceCompatibility = JavaVersion.VERSION_25
     targetCompatibility = JavaVersion.VERSION_25
+}
+
+javafx {
+    version = '25.0.2'
+    modules = ['javafx.controls']
 }
 
 repositories {
@@ -42,7 +48,7 @@ test {
 }
 
 application {
-    mainClass = 'ultron.Ultron'
+    mainClass = 'ultron.gui.UltronApp'
 }
 
 jar {
@@ -54,8 +60,4 @@ jar {
 
 shadowJar {
     archiveFileName = 'duke.jar'
-}
-
-run {
-    standardInput = System.in
 }

@@ -44,42 +44,35 @@ public class Ultron {
 
                 Parser.CommandType command = parser.parseCommand(input);
                 switch (command) {
-                case TODO:
-                    String description = parser.getArgument(input, command);
-                    if (description.isEmpty()) {
-                        throw new UltronException("You FOOL! The description of a todo cannot be empty.");
+                    case TODO -> {
+                        String description = parser.getArgument(input, command);
+                        if (description.isEmpty()) {
+                            throw new UltronException("You FOOL! The description of a todo cannot be empty.");
+                        }
+                        tasks.add(new Todo(description));
+                        storage.saveTasks(tasks.getTasks());
+                        ui.showTaskAdded(tasks.get(tasks.size() - 1));
+                        ui.showTaskCount(tasks.size());
+                        ui.showSeparator();
                     }
-                    tasks.add(new Todo(description));
-                    storage.saveTasks(tasks.getTasks());
-                    ui.showTaskAdded(tasks.get(tasks.size() - 1));
-                    ui.showTaskCount(tasks.size());
-                    ui.showSeparator();
-                    break;
-                case DEADLINE:
-                    String input1 = parser.getArgument(input, command);
-                    tasks.add(new Deadline(input1));
-                    storage.saveTasks(tasks.getTasks());
-                    ui.showTaskAdded(tasks.get(tasks.size() - 1));
-                    ui.showTaskCount(tasks.size());
-                    ui.showSeparator();
-                    break;
-                case EVENT:
-                    String eventDetails = parser.getArgument(input, command);
-                    tasks.add(new Event(eventDetails));
-                    storage.saveTasks(tasks.getTasks());
-                    ui.showTaskAdded(tasks.get(tasks.size() - 1));
-                    ui.showTaskCount(tasks.size());
-                    ui.showSeparator();
-                    break;
-                case UNKNOWN:
-                    throw new UltronException("INVALID INPUT");
-                case BYE:
-                case LIST:
-                case MARK:
-                case UNMARK:
-                case DELETE:
-                case FIND:
-                    throw new UltronException("Invalid command");
+                    case DEADLINE -> {
+                        String input1 = parser.getArgument(input, command);
+                        tasks.add(new Deadline(input1));
+                        storage.saveTasks(tasks.getTasks());
+                        ui.showTaskAdded(tasks.get(tasks.size() - 1));
+                        ui.showTaskCount(tasks.size());
+                        ui.showSeparator();
+                    }
+                    case EVENT -> {
+                        String eventDetails = parser.getArgument(input, command);
+                        tasks.add(new Event(eventDetails));
+                        storage.saveTasks(tasks.getTasks());
+                        ui.showTaskAdded(tasks.get(tasks.size() - 1));
+                        ui.showTaskCount(tasks.size());
+                        ui.showSeparator();
+                    }
+                    case UNKNOWN -> throw new UltronException("INVALID INPUT");
+                    default -> throw new UltronException("Invalid command");
                 }
             } catch (UltronException e) {
                 ui.showError(e.getMessage());

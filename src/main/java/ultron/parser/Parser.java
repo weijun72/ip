@@ -56,13 +56,13 @@ public class Parser {
     public Command parseCommandObject(String input) {
         CommandType commandType = parseCommand(input);
         return switch (commandType) {
-        case BYE -> new ExitCommand();
-        case LIST -> new ListCommand();
-        case MARK -> new MarkCommand(getArgument(input, commandType));
-        case UNMARK -> new UnmarkCommand(getArgument(input, commandType));
-        case DELETE -> new DeleteCommand(getArgument(input, commandType));
-        case FIND -> new FindCommand(getArgument(input, commandType));
-        default -> null;
+            case BYE -> new ExitCommand();
+            case LIST -> new ListCommand();
+            case MARK -> new MarkCommand(getArgument(input, commandType));
+            case UNMARK -> new UnmarkCommand(getArgument(input, commandType));
+            case DELETE -> new DeleteCommand(getArgument(input, commandType));
+            case FIND -> new FindCommand(getArgument(input, commandType));
+            default -> null;
         };
     }
 
@@ -79,16 +79,16 @@ public class Parser {
 
     private String getCommandWord(CommandType command) {
         return switch (command) {
-        case BYE -> "bye";
-        case LIST -> "list";
-        case MARK -> "mark";
-        case UNMARK -> "unmark";
-        case DELETE -> "delete";
-        case FIND -> "find";
-        case TODO -> "todo";
-        case DEADLINE -> "deadline";
-        case EVENT -> "event";
-        case UNKNOWN -> "";
+            case BYE -> "bye";
+            case LIST -> "list";
+            case MARK -> "mark";
+            case UNMARK -> "unmark";
+            case DELETE -> "delete";
+            case FIND -> "find";
+            case TODO -> "todo";
+            case DEADLINE -> "deadline";
+            case EVENT -> "event";
+            case UNKNOWN -> "";
         };
     }
 }

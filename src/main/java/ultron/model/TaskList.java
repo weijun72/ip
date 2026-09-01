@@ -17,6 +17,15 @@ public class TaskList {
     }
 
     /**
+     * Creates a task list containing the supplied tasks.
+     *
+     * @param initialTasks the tasks to place in the list
+     */
+    public TaskList(Task... initialTasks) {
+        this.tasks = new ArrayList<>(List.of(initialTasks));
+    }
+
+    /**
      * Creates a task list containing previously loaded tasks.
      *
      * @param tasks tasks to place in the list

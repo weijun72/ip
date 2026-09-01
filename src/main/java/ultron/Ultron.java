@@ -1,13 +1,5 @@
 package ultron;
 
-import ultron.command.Command;
-import ultron.exception.UltronException;
-import ultron.model.Deadline;
-import ultron.model.Event;
-import ultron.model.TaskList;
-import ultron.model.Todo;
-import ultron.parser.Parser;
-import ultron.storage.Storage;
 import ultron.ui.Ui;
 
 /**
@@ -21,61 +13,14 @@ public class Ultron {
      * @param args command-line arguments, which are not used
      */
     public static void main(String[] args) {
-
         Ui ui = new Ui();
         ui.showWelcome();
-        Parser parser = new Parser();
-
-        Storage storage = new Storage(System.getProperty("ultron.saveFile", "data/ultron.txt"));
-        TaskList tasks = new TaskList(storage.loadTasks());
+        Chatbot chatbot = new Chatbot(System.getProperty("ultron.saveFile", "data/ultron.txt"));
         while (true) {
             String input = ui.readCommand();
-
-            try {
-                Command commandObject = parser.parseCommandObject(input);
-                if (commandObject != null) {
-                    commandObject.execute(tasks, ui, storage);
-                    if (commandObject.isExit()) {
-                        ui.close();
-                        return;
-                    }
-                    continue;
-                }
-
-                Parser.CommandType command = parser.parseCommand(input);
-                switch (command) {
-                    case TODO -> {
-                        String description = parser.getArgument(input, command);
-                        if (description.isEmpty()) {
-                            throw new UltronException("You FOOL! The description of a todo cannot be empty.");
-                        }
-                        tasks.add(new Todo(description));
-                        storage.saveTasks(tasks.getTasks());
-                        ui.showTaskAdded(tasks.get(tasks.size() - 1));
-                        ui.showTaskCount(tasks.size());
-                        ui.showSeparator();
-                    }
-                    case DEADLINE -> {
-                        String input1 = parser.getArgument(input, command);
-                        tasks.add(new Deadline(input1));
-                        storage.saveTasks(tasks.getTasks());
-                        ui.showTaskAdded(tasks.get(tasks.size() - 1));
-                        ui.showTaskCount(tasks.size());
-                        ui.showSeparator();
-                    }
-                    case EVENT -> {
-                        String eventDetails = parser.getArgument(input, command);
-                        tasks.add(new Event(eventDetails));
-                        storage.saveTasks(tasks.getTasks());
-                        ui.showTaskAdded(tasks.get(tasks.size() - 1));
-                        ui.showTaskCount(tasks.size());
-                        ui.showSeparator();
-                    }
-                    case UNKNOWN -> throw new UltronException("INVALID INPUT");
-                    default -> throw new UltronException("Invalid command");
-                }
-            } catch (UltronException e) {
-                ui.showError(e.getMessage());
+            if (chatbot.processCommand(input, ui)) {
+                ui.close();
+                return;
             }
         }
     }

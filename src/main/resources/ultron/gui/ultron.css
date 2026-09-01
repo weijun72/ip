@@ -1,0 +1,78 @@
+.app-root {
+    -fx-background-color: #f5f7fb;
+    -fx-font-family: "Avenir Next", "Helvetica Neue", sans-serif;
+}
+
+.header {
+    -fx-background-color: linear-gradient(to right, #111827, #7f1d1d);
+    -fx-padding: 24 30 22 30;
+}
+
+.title {
+    -fx-text-fill: white;
+    -fx-font-size: 28px;
+    -fx-font-weight: bold;
+    -fx-letter-spacing: 2px;
+}
+
+.subtitle {
+    -fx-text-fill: #d1d5db;
+    -fx-font-size: 13px;
+}
+
+.conversation {
+    -fx-background: #f5f7fb;
+    -fx-background-color: #f5f7fb;
+    -fx-border-color: transparent;
+}
+
+.conversation > .viewport {
+    -fx-background-color: #f5f7fb;
+}
+
+.messages {
+    -fx-padding: 22 28 22 28;
+}
+
+.message {
+    -fx-background-radius: 16px;
+    -fx-padding: 11 14 11 14;
+    -fx-font-size: 14px;
+    -fx-line-spacing: 2px;
+}
+
+.bot-message {
+    -fx-background-color: white;
+    -fx-text-fill: #1f2937;
+    -fx-effect: dropshadow(gaussian, rgba(15, 23, 42, 0.08), 8, 0, 0, 2);
+}
+
+.user-message {
+    -fx-background-color: #991b1b;
+    -fx-text-fill: white;
+}
+
+.composer {
+    -fx-background-color: white;
+    -fx-padding: 16 28 18 28;
+    -fx-border-color: #e5e7eb transparent transparent transparent;
+}
+
+.text-field {
+    -fx-background-radius: 8px;
+    -fx-border-color: #d1d5db;
+    -fx-border-radius: 8px;
+    -fx-padding: 10 12 10 12;
+}
+
+.button {
+    -fx-background-color: #991b1b;
+    -fx-background-radius: 8px;
+    -fx-text-fill: white;
+    -fx-font-weight: bold;
+    -fx-padding: 10 18 10 18;
+}
+
+.button:hover {
+    -fx-background-color: #7f1d1d;
+}

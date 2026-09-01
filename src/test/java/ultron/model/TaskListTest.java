@@ -28,6 +28,18 @@ class TaskListTest {
     }
 
     @Test
+    void taskList_initialTasksSupplied_retainsTasksInOrder() {
+        Task firstTask = new Todo("read book");
+        Task secondTask = new Todo("return book");
+
+        TaskList tasks = new TaskList(firstTask, secondTask);
+
+        assertEquals(2, tasks.size());
+        assertSame(firstTask, tasks.get(0));
+        assertSame(secondTask, tasks.get(1));
+    }
+
+    @Test
     void remove_taskAtIndex_returnsTaskAndClosesGap() {
         Task firstTask = new Todo("read book");
         Task secondTask = new Todo("return book");

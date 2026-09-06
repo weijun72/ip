@@ -1,5 +1,7 @@
 package ultron.command;
 
+import java.util.OptionalInt;
+
 import ultron.model.Task;
 import ultron.model.TaskList;
 import ultron.storage.Storage;
@@ -22,18 +24,12 @@ public class UnmarkCommand extends Command {
 
     @Override
     public void execute(TaskList tasks, Ui ui, Storage storage) {
-        try {
-            int taskNumber = Integer.parseInt(taskNumberText);
-            if (taskNumber < 1 || taskNumber > tasks.size()) {
-                ui.showInvalidTaskNumber(tasks.size());
-            } else {
-                Task task = tasks.get(taskNumber - 1);
-                task.markAsUndone();
-                storage.saveTasks(tasks.getTasks());
-                ui.showTaskUnmarked(task);
-            }
-        } catch (NumberFormatException e) {
-            ui.showInvalidTaskNumberFormat("unmark");
+        OptionalInt taskIndex = getTaskIndex(taskNumberText, tasks, ui, "unmark");
+        if (taskIndex.isPresent()) {
+            Task task = tasks.get(taskIndex.getAsInt());
+            task.markAsUndone();
+            storage.saveTasks(tasks.getTasks());
+            ui.showTaskUnmarked(task);
         }
         ui.showSeparator();
     }

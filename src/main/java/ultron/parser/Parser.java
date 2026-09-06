@@ -74,6 +74,7 @@ public class Parser {
      * @return the trimmed argument text
      */
     public String getArgument(String input, CommandType command) {
+        assert command != CommandType.UNKNOWN : "An unknown command has no command word";
         return input.substring(getCommandWord(command).length()).trim();
     }
 

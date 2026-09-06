@@ -50,6 +50,7 @@ public class TaskList {
      * @return the selected task
      */
     public Task get(int index) {
+        assert index >= 0 && index < tasks.size() : "Task index must identify an existing task";
         return tasks.get(index);
     }
 
@@ -60,6 +61,7 @@ public class TaskList {
      * @return the removed task
      */
     public Task remove(int index) {
+        assert index >= 0 && index < tasks.size() : "Task index must identify an existing task";
         return tasks.remove(index);
     }
 

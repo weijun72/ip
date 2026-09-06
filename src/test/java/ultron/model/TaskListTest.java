@@ -68,7 +68,7 @@ class TaskListTest {
     }
 
     @Test
-    void getMatchingTasks_keywordMatchesTasks_returnsMatchingTasksInOrder() {
+    void getMatchingTasks_keywordMatchesTasks_returnsUnmodifiableMatchesInOrder() {
         Task firstTask = new Todo("read book");
         Task secondTask = new Todo("return book");
         TaskList tasks = new TaskList();
@@ -79,6 +79,7 @@ class TaskListTest {
         List<Task> matchingTasks = tasks.getMatchingTasks("book");
 
         assertEquals(List.of(firstTask, secondTask), matchingTasks);
+        assertThrows(UnsupportedOperationException.class, () -> matchingTasks.add(new Todo("buy bread")));
     }
 
     @Test

@@ -38,12 +38,9 @@ public class Storage {
      * @param tasks the tasks to save
      */
     public void saveTasks(List<Task> tasks) {
-        ArrayList<String> taskLines = new ArrayList<>();
-        for (Task task : tasks) {
-            String taskLine = task.getType().getSymbol() + " | " + (task.isDone() ? "1" : "0")
-                    + " | " + task.getDescription();
-            taskLines.add(taskLine);
-        }
+        List<String> taskLines = tasks.stream()
+                .map(this::formatTaskForStorage)
+                .toList();
 
         try {
             Path parentDirectory = saveFile.getParent();
@@ -54,6 +51,17 @@ public class Storage {
         } catch (IOException e) {
             System.out.println(" OOPS!!! I could not save your tasks.");
         }
+    }
+
+    /**
+     * Creates the storage line representing a task.
+     *
+     * @param task the task to serialize
+     * @return the task's storage line
+     */
+    private String formatTaskForStorage(Task task) {
+        return task.getType().getSymbol() + " | " + (task.isDone() ? "1" : "0")
+                + " | " + task.getDescription();
     }
 
     /**

@@ -1,5 +1,7 @@
 package ultron.command;
 
+import java.util.OptionalInt;
+
 import ultron.model.Task;
 import ultron.model.TaskList;
 import ultron.storage.Storage;
@@ -22,19 +24,12 @@ public class DeleteCommand extends Command {
 
     @Override
     public void execute(TaskList tasks, Ui ui, Storage storage) {
-        try {
-            int taskNumber = Integer.parseInt(taskNumberText);
-            if (taskNumber < 1 || taskNumber > tasks.size()) {
-                ui.showInvalidTaskNumber(tasks.size());
-            } else {
-                Task deletedTask = tasks.remove(taskNumber - 1);
-                ui.showTaskDeleted(deletedTask);
-                storage.saveTasks(tasks.getTasks());
-                ui.showTaskCount(tasks.size());
-                ui.showSeparator();
-            }
-        } catch (NumberFormatException e) {
-            ui.showInvalidTaskNumberFormat("delete");
+        OptionalInt taskIndex = getTaskIndex(taskNumberText, tasks, ui, "delete");
+        if (taskIndex.isPresent()) {
+            Task deletedTask = tasks.remove(taskIndex.getAsInt());
+            ui.showTaskDeleted(deletedTask);
+            storage.saveTasks(tasks.getTasks());
+            ui.showTaskCount(tasks.size());
         }
         ui.showSeparator();
     }

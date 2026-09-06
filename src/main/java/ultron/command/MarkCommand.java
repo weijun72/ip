@@ -1,5 +1,7 @@
 package ultron.command;
 
+import java.util.OptionalInt;
+
 import ultron.model.Task;
 import ultron.model.TaskList;
 import ultron.storage.Storage;
@@ -22,18 +24,12 @@ public class MarkCommand extends Command {
 
     @Override
     public void execute(TaskList tasks, Ui ui, Storage storage) {
-        try {
-            int taskNumber = Integer.parseInt(taskNumberText);
-            if (taskNumber < 1 || taskNumber > tasks.size()) {
-                ui.showInvalidTaskNumber(tasks.size());
-            } else {
-                Task task = tasks.get(taskNumber - 1);
-                task.markAsDone();
-                storage.saveTasks(tasks.getTasks());
-                ui.showTaskMarked(task);
-            }
-        } catch (NumberFormatException e) {
-            ui.showInvalidTaskNumberFormat("mark");
+        OptionalInt taskIndex = getTaskIndex(taskNumberText, tasks, ui, "mark");
+        if (taskIndex.isPresent()) {
+            Task task = tasks.get(taskIndex.getAsInt());
+            task.markAsDone();
+            storage.saveTasks(tasks.getTasks());
+            ui.showTaskMarked(task);
         }
         ui.showSeparator();
     }

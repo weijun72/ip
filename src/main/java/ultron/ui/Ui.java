@@ -4,6 +4,7 @@ import java.util.List;
 import java.util.Scanner;
 import java.util.function.Consumer;
 
+import ultron.model.Deadline;
 import ultron.model.Task;
 import ultron.model.TaskList;
 
@@ -122,6 +123,18 @@ public class Ui {
     public void showTaskAdded(Task task) {
         display(" added:");
         display("   [" + task.getType().getSymbol() + "] [ ] " + task.getDescription());
+    }
+
+    /**
+     * Shows a deadline's details before and after it is rescheduled.
+     *
+     * @param previousDescription the deadline details before rescheduling
+     * @param deadline the rescheduled deadline
+     */
+    public void showDeadlineRescheduled(String previousDescription, Deadline deadline) {
+        display(" RESCHEDULED:");
+        display("   From: " + previousDescription);
+        display("   To:   " + deadline.getDescription());
     }
 
     /** Shows the current number of tasks. */

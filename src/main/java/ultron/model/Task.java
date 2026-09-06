@@ -16,6 +16,7 @@ public class Task {
      * @param type the category of task
      */
     public Task(String description, TaskType type) {
+        assert type != null : "Every task must have a type";
         this.description = description;
         this.isDone = false;
         this.type = type;

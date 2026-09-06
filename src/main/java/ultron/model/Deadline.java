@@ -1,8 +1,11 @@
 package ultron.model;
 
 import java.time.LocalDate;
+import java.time.LocalTime;
 import java.time.format.DateTimeFormatter;
 import java.time.format.DateTimeParseException;
+import java.time.format.ResolverStyle;
+import java.util.Objects;
 
 import ultron.exception.UltronException;
 
@@ -13,6 +16,12 @@ public class Deadline extends Task {
     /** Message shown when a deadline command is not formatted correctly. */
     private static final String INVALID_FORMAT_MESSAGE = "You FOOL! Your formatting is WRONG! "
             + "Example input: deadline return book /by 2/12/2019 1800.";
+    /** Message shown when a rescheduled date is before today. */
+    private static final String PAST_DATE_MESSAGE = "You FOOL! A rescheduled deadline cannot be in the past.";
+    /** Message shown when a replacement time is not a 24-hour {@code HHmm} value. */
+    private static final String INVALID_TIME_MESSAGE = "You FOOL! Use a 24-hour time in HHmm format.";
+    private static final DateTimeFormatter TIME_FORMAT = DateTimeFormatter.ofPattern("HHmm")
+            .withResolverStyle(ResolverStyle.STRICT);
 
     protected LocalDate date;
     protected String time;
@@ -52,5 +61,47 @@ public class Deadline extends Task {
     public String getDescription() {
         String formattedDate = this.date.format(DateTimeFormatter.ofPattern("dd/MMM/yyyy"));
         return this.description + "( by: " + formattedDate + this.time + " )";
+    }
+
+    /**
+     * Returns the current due date.
+     *
+     * @return the due date without the optional time
+     */
+    public LocalDate getDueDate() {
+        return date;
+    }
+
+    /**
+     * Reschedules this deadline to a date that is not in the past.
+     *
+     * <p>When {@code replacementTime} is {@code null}, the existing optional time is retained.</p>
+     *
+     * @param newDate the new due date
+     * @param replacementTime an optional replacement 24-hour {@code HHmm} time
+     * @throws UltronException if the date is in the past or the replacement time is invalid
+     */
+    public void reschedule(LocalDate newDate, String replacementTime) throws UltronException {
+        Objects.requireNonNull(newDate);
+        if (newDate.isBefore(LocalDate.now())) {
+            throw new UltronException(PAST_DATE_MESSAGE);
+        }
+        if (replacementTime != null && !isValidTime(replacementTime)) {
+            throw new UltronException(INVALID_TIME_MESSAGE);
+        }
+
+        date = newDate;
+        if (replacementTime != null) {
+            time = " " + replacementTime;
+        }
+    }
+
+    private boolean isValidTime(String candidateTime) {
+        try {
+            LocalTime.parse(candidateTime, TIME_FORMAT);
+            return true;
+        } catch (DateTimeParseException e) {
+            return false;
+        }
     }
 }

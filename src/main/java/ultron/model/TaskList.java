@@ -2,6 +2,7 @@ package ultron.model;
 
 import java.util.ArrayList;
 import java.util.List;
+import java.util.stream.IntStream;
 
 /**
  * Manages the ordered collection of tasks in the chatbot.
@@ -84,14 +85,15 @@ public class TaskList {
     }
 
     /**
-     * Returns tasks whose descriptions contain the given keyword.
+     * Returns the zero-based positions of tasks whose descriptions contain the given keyword.
      *
      * @param keyword the text to search for.
-     * @return matching tasks in their original list order.
+     * @return matching task positions in their original list order.
      */
-    public List<Task> getMatchingTasks(String keyword) {
-        return tasks.stream()
-                .filter(task -> task.getDescription().contains(keyword))
+    public List<Integer> getMatchingTaskIndexes(String keyword) {
+        return IntStream.range(0, tasks.size())
+                .filter(index -> tasks.get(index).getDescription().contains(keyword))
+                .boxed()
                 .toList();
     }
 }

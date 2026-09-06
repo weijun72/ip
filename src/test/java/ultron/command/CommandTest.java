@@ -141,6 +141,20 @@ class CommandTest {
         assertEquals("read book", todo.getDescription());
     }
 
+    @Test
+    void findCommand_matchingTasks_showsOriginalTaskNumbers() throws UltronException {
+        TaskList tasks = new TaskList(
+                new Todo("read book"),
+                new Todo("buy bread"),
+                new Todo("return book"));
+        List<String> output = new ArrayList<>();
+
+        new FindCommand("book").execute(tasks, new Ui(output::add), storage());
+
+        assertTrue(output.contains(" 1.[T][ ] read book"));
+        assertTrue(output.contains(" 3.[T][ ] return book"));
+    }
+
     private Storage storage() {
         return new Storage(temporaryDirectory.resolve("tasks.txt").toString());
     }

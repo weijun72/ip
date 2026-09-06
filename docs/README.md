@@ -1,30 +1,29 @@
-# Duke User Guide
+# Ultron User Guide
 
-// Update the title above to match the actual product name
+Ultron is a task manager that supports todos, deadlines, and events through its JavaFX chat interface.
 
-// Product screenshot goes here
+## Rescheduling deadlines
 
-// Product intro goes here
+Use `reschedule` to change the due date of an incomplete deadline. The task number must be the number shown by
+`list` or `find`.
 
-## Adding deadlines
+### Postpone by days
 
-// Describe the action and its outcome.
-
-// Give examples of usage
-
-Example: `keyword (optional arguments)`
-
-// A description of the expected outcome goes here
-
-```
-expected output
+```text
+reschedule 2 3d
 ```
 
-## Feature ABC
+This adds three days to deadline 2's current due date and preserves its existing optional time.
 
-// Feature details
+### Set a specific date
 
+```text
+reschedule 2 /by 20/09/2026
+reschedule 2 /by 20/09/2026 1800
+```
 
-## Feature XYZ
+Dates use `d/MM/yyyy` and must be today or later. An optional replacement time must be a 24-hour `HHmm` value.
+Without a replacement time, the existing time is kept.
 
-// Feature details
+Ultron shows both the previous and new deadline details after a successful reschedule. Completed deadlines,
+todos, and events cannot be rescheduled.

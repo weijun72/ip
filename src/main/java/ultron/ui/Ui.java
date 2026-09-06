@@ -87,15 +87,16 @@ public class Ui {
     }
 
     /**
-     * Displays tasks whose descriptions match a search keyword.
+     * Displays matching tasks with their original task numbers.
      *
-     * @param matchingTasks the matching tasks to display.
+     * @param tasks the complete task list
+     * @param matchingTaskIndexes the zero-based positions of matching tasks
      */
-    public void showMatchingTasks(List<Task> matchingTasks) {
+    public void showMatchingTasks(TaskList tasks, List<Integer> matchingTaskIndexes) {
         display(" Here are the matching tasks in your list:");
-        for (int i = 0; i < matchingTasks.size(); i++) {
-            Task task = matchingTasks.get(i);
-            display(" " + (i + 1) + ".[" + task.getType().getSymbol() + "]["
+        for (int taskIndex : matchingTaskIndexes) {
+            Task task = tasks.get(taskIndex);
+            display(" " + (taskIndex + 1) + ".[" + task.getType().getSymbol() + "]["
                     + task.getStatusIcon() + "] " + task.getDescription());
         }
         display(SEPARATOR);

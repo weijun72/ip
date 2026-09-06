@@ -43,4 +43,17 @@ Start the JavaFX chat interface with:
 
 Enter task commands in the message box, such as `todo read book`,
 `deadline submit report /by Friday`, `event team meeting /from 2pm /to 3pm`,
-`list`, `find report`, `mark 1`, `unmark 1`, `delete 1`, and `bye`.
+`list`, `find report`, `mark 1`, `unmark 1`, `delete 1`, `reschedule 2 3d`, and `bye`.
+
+### Rescheduling deadlines
+
+Use `reschedule` to postpone an incomplete deadline or set a new due date.
+
+```
+reschedule 2 3d
+reschedule 2 /by 20/09/2026
+reschedule 2 /by 20/09/2026 1800
+```
+
+`3d` adds three days to the deadline's current due date. The date must be today or later. If no replacement
+time is supplied, the deadline's existing time is retained; supplied times must use 24-hour `HHmm` format.

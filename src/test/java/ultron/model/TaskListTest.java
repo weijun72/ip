@@ -68,7 +68,7 @@ class TaskListTest {
     }
 
     @Test
-    void getMatchingTasks_keywordMatchesTasks_returnsUnmodifiableMatchesInOrder() {
+    void getMatchingTaskIndexes_keywordMatchesTasks_returnsUnmodifiableIndexesInOrder() {
         Task firstTask = new Todo("read book");
         Task secondTask = new Todo("return book");
         TaskList tasks = new TaskList();
@@ -76,19 +76,19 @@ class TaskListTest {
         tasks.add(new Todo("buy bread"));
         tasks.add(secondTask);
 
-        List<Task> matchingTasks = tasks.getMatchingTasks("book");
+        List<Integer> matchingTaskIndexes = tasks.getMatchingTaskIndexes("book");
 
-        assertEquals(List.of(firstTask, secondTask), matchingTasks);
-        assertThrows(UnsupportedOperationException.class, () -> matchingTasks.add(new Todo("buy bread")));
+        assertEquals(List.of(0, 2), matchingTaskIndexes);
+        assertThrows(UnsupportedOperationException.class, () -> matchingTaskIndexes.add(1));
     }
 
     @Test
-    void getMatchingTasks_keywordMatchesNoTasks_returnsEmptyList() {
+    void getMatchingTaskIndexes_keywordMatchesNoTasks_returnsEmptyList() {
         TaskList tasks = new TaskList();
         tasks.add(new Todo("read book"));
 
-        List<Task> matchingTasks = tasks.getMatchingTasks("bread");
+        List<Integer> matchingTaskIndexes = tasks.getMatchingTaskIndexes("bread");
 
-        assertEquals(List.of(), matchingTasks);
+        assertEquals(List.of(), matchingTaskIndexes);
     }
 }

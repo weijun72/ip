@@ -59,6 +59,31 @@ public class UltronStorageTest {
         }
     }
 
+    @Test
+    void rescheduledDeadline_existingSavedFormat_updatesAndRestoresDeadline() throws Exception {
+        Path testSaveFile = Files.createTempFile("ultron-reschedule-storage-test", ".txt");
+        String originalSaveFile = System.getProperty("ultron.saveFile");
+
+        try {
+            Files.write(testSaveFile, List.of("D | 0 | return book( by: 02/Dec/2099 1800 )"), StandardCharsets.UTF_8);
+            System.setProperty("ultron.saveFile", testSaveFile.toString());
+
+            runUltron("reschedule 1 3d\nbye\n");
+
+            assertEquals(List.of("D | 0 | return book( by: 05/Dec/2099 1800 )"),
+                    Files.readAllLines(testSaveFile, StandardCharsets.UTF_8));
+            String restoredOutput = runUltron("list\nbye\n");
+            assertTrue(restoredOutput.contains("1.[D] [ ] return book( by: 05/Dec/2099 1800 )"));
+        } finally {
+            if (originalSaveFile == null) {
+                System.clearProperty("ultron.saveFile");
+            } else {
+                System.setProperty("ultron.saveFile", originalSaveFile);
+            }
+            Files.deleteIfExists(testSaveFile);
+        }
+    }
+
     /**
      * Runs the chatbot with the supplied commands and captures its output.
      *

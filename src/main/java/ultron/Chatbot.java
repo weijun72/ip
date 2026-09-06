@@ -83,6 +83,7 @@ public class Chatbot {
     }
 
     private void showSavedTask(Ui ui) {
+        assert tasks.size() > 0 : "A task must be added before displaying it";
         storage.saveTasks(tasks.getTasks());
         ui.showTaskAdded(tasks.get(tasks.size() - 1));
         ui.showTaskCount(tasks.size());

@@ -1,5 +1,7 @@
 package ultron.model;
 
+import java.util.Optional;
+
 /**
  * The supported categories of tasks and their display symbols.
  */
@@ -26,5 +28,20 @@ public enum TaskType {
      */
     public String getSymbol() {
         return symbol;
+    }
+
+    /**
+     * Returns the task type represented by a saved symbol.
+     *
+     * @param symbol the saved one-letter task-type symbol
+     * @return the matching task type, or an empty value when the symbol is unknown
+     */
+    public static Optional<TaskType> fromSymbol(String symbol) {
+        for (TaskType taskType : values()) {
+            if (taskType.symbol.equals(symbol)) {
+                return Optional.of(taskType);
+            }
+        }
+        return Optional.empty();
     }
 }

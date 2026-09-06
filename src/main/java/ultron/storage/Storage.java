@@ -14,6 +14,7 @@ import ultron.exception.UltronException;
 import ultron.model.Deadline;
 import ultron.model.Event;
 import ultron.model.Task;
+import ultron.model.TaskType;
 import ultron.model.Todo;
 
 /**
@@ -82,11 +83,12 @@ public class Storage {
             throw new UltronException("Invalid saved task");
         }
 
-        Task task = switch (parts[0]) {
-            case "T" -> new Todo(parts[2]);
-            case "D" -> createSavedDeadline(parts[2]);
-            case "E" -> createSavedEvent(parts[2]);
-            default -> throw new UltronException("Invalid saved task type");
+        TaskType taskType = TaskType.fromSymbol(parts[0])
+                .orElseThrow(() -> new UltronException("Invalid saved task type"));
+        Task task = switch (taskType) {
+            case TODO -> new Todo(parts[2]);
+            case DEADLINE -> createSavedDeadline(parts[2]);
+            case EVENT -> createSavedEvent(parts[2]);
         };
         if (parts[1].equals("1")) {
             task.markAsDone();

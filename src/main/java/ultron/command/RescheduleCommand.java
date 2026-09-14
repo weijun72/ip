@@ -19,10 +19,10 @@ import ultron.ui.Ui;
  * Reschedules an incomplete deadline to an absolute or relative date.
  */
 public class RescheduleCommand extends Command {
-    private static final String INVALID_FORMAT_MESSAGE = "You FOOL! Use: reschedule <task number> "
+    private static final String INVALID_FORMAT_MESSAGE = "Timeline recalibration requires: reschedule <task number> "
             + "/by d/MM/yyyy [HHmm] or reschedule <task number> <positive days>d.";
-    private static final String NON_DEADLINE_MESSAGE = "You FOOL! Only deadlines can be rescheduled.";
-    private static final String COMPLETED_DEADLINE_MESSAGE = "You FOOL! Completed deadlines cannot be rescheduled.";
+    private static final String NON_DEADLINE_MESSAGE = "Only deadlines possess a timeline to recalibrate.";
+    private static final String COMPLETED_DEADLINE_MESSAGE = "Completed deadlines are locked in the past.";
     private static final Pattern ABSOLUTE_ARGUMENT_PATTERN = Pattern.compile(
             "(\\S+) /by (\\d{1,2}/\\d{1,2}/\\d{4})(?: (\\S+))?");
     private static final Pattern RELATIVE_ARGUMENT_PATTERN = Pattern.compile("(\\S+) ([1-9]\\d*)d");

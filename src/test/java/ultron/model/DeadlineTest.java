@@ -39,6 +39,22 @@ class DeadlineTest {
     }
 
     @Test
+    void constructor_nonExistentDate_exceptionThrown() {
+        assertThrows(UltronException.class, () -> new Deadline("return book /by 30/2/2028"));
+    }
+
+    @Test
+    void constructor_invalidInitialTime_exceptionThrown() {
+        assertThrows(UltronException.class, () -> new Deadline("return book /by 2/12/2099 2460"));
+    }
+
+    @Test
+    void constructor_repeatedByMarker_exceptionThrown() {
+        assertThrows(UltronException.class, () -> new Deadline(
+                "return book /by 2/12/2099 /by 3/12/2099"));
+    }
+
+    @Test
     void reschedule_newDateWithoutTime_preservesExistingTime() throws UltronException {
         Deadline deadline = new Deadline("return book /by 2/12/2099 1800");
 

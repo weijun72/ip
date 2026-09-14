@@ -26,28 +26,21 @@ public class Parser {
      * @return the matching command, or {@code UNKNOWN} when no command matches
      */
     public CommandType parseCommand(String input) {
-        if (input.equals("bye")) {
-            return CommandType.BYE;
-        } else if (input.equals("list")) {
-            return CommandType.LIST;
-        } else if (input.startsWith("mark ")) {
-            return CommandType.MARK;
-        } else if (input.startsWith("unmark ")) {
-            return CommandType.UNMARK;
-        } else if (input.startsWith("delete ")) {
-            return CommandType.DELETE;
-        } else if (input.startsWith("find ")) {
-            return CommandType.FIND;
-        } else if (input.startsWith("reschedule ")) {
-            return CommandType.RESCHEDULE;
-        } else if (input.equals("todo") || input.startsWith("todo ")) {
-            return CommandType.TODO;
-        } else if (input.startsWith("deadline ")) {
-            return CommandType.DEADLINE;
-        } else if (input.startsWith("event ")) {
-            return CommandType.EVENT;
-        }
-        return CommandType.UNKNOWN;
+        String trimmedInput = input.trim();
+        String commandWord = trimmedInput.split("\\s+", 2)[0];
+        return switch (commandWord) {
+            case "bye" -> trimmedInput.equals("bye") ? CommandType.BYE : CommandType.UNKNOWN;
+            case "list" -> trimmedInput.equals("list") ? CommandType.LIST : CommandType.UNKNOWN;
+            case "mark" -> CommandType.MARK;
+            case "unmark" -> CommandType.UNMARK;
+            case "delete" -> CommandType.DELETE;
+            case "find" -> CommandType.FIND;
+            case "reschedule" -> CommandType.RESCHEDULE;
+            case "todo" -> CommandType.TODO;
+            case "deadline" -> CommandType.DEADLINE;
+            case "event" -> CommandType.EVENT;
+            default -> CommandType.UNKNOWN;
+        };
     }
 
     /**
@@ -79,7 +72,8 @@ public class Parser {
      */
     public String getArgument(String input, CommandType command) {
         assert command != CommandType.UNKNOWN : "An unknown command has no command word";
-        return input.substring(getCommandWord(command).length()).trim();
+        String trimmedInput = input.trim();
+        return trimmedInput.substring(getCommandWord(command).length()).trim();
     }
 
     private String getCommandWord(CommandType command) {

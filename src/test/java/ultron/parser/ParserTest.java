@@ -21,4 +21,11 @@ class ParserTest {
 
         assertInstanceOf(RescheduleCommand.class, parser.parseCommandObject("reschedule 1 /by 2/12/2099"));
     }
+
+    @Test
+    void parseCommand_multipleSpaces_returnsCommandType() {
+        Parser parser = new Parser();
+
+        assertEquals(Parser.CommandType.DEADLINE, parser.parseCommand("  deadline   submit report /by 2/12/2099"));
+    }
 }

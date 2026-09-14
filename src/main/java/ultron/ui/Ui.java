@@ -18,11 +18,13 @@ public class Ui {
     private static final String BRIGHT_RED = "\u001B[91m";
     private final Scanner scanner;
     private final Consumer<String> output;
+    private final Consumer<String> errorOutput;
 
     /** Creates a user interface that reads commands from standard input. */
     public Ui() {
         scanner = new Scanner(System.in);
         output = System.out::println;
+        errorOutput = output;
     }
 
     /**
@@ -33,6 +35,19 @@ public class Ui {
     public Ui(Consumer<String> output) {
         scanner = null;
         this.output = output;
+        errorOutput = output;
+    }
+
+    /**
+     * Creates a user interface that sends normal output and errors to separate handlers.
+     *
+     * @param output the handler that receives normal output lines
+     * @param errorOutput the handler that receives error lines
+     */
+    public Ui(Consumer<String> output, Consumer<String> errorOutput) {
+        scanner = null;
+        this.output = output;
+        this.errorOutput = errorOutput;
     }
 
     /**
@@ -145,17 +160,17 @@ public class Ui {
 
     /** Shows an invalid task-number error. */
     public void showInvalidTaskNumber(int taskCount) {
-        display(" You imbecile! Enter a task number from 1 to " + taskCount + ".");
+        displayError(" You imbecile! Enter a task number from 1 to " + taskCount + ".");
     }
 
     /** Shows an invalid task-number format error. */
     public void showInvalidTaskNumberFormat(String command) {
-        display(" You imbecile! Provide a task number, for example: " + command + " 2");
+        displayError(" You imbecile! Provide a task number, for example: " + command + " 2");
     }
 
     /** Shows an input error and closes the response section. */
     public void showError(String message) {
-        display(" " + message);
+        displayError(" " + message);
         display(SEPARATOR);
     }
 
@@ -166,5 +181,9 @@ public class Ui {
 
     private void display(String message) {
         output.accept(message);
+    }
+
+    private void displayError(String message) {
+        errorOutput.accept(message);
     }
 }

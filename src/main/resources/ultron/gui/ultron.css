@@ -1,78 +1,133 @@
 .app-root {
-    -fx-background-color: #f5f7fb;
+    -fx-background-color: #101318;
     -fx-font-family: "Avenir Next", "Helvetica Neue", sans-serif;
 }
 
 .header {
-    -fx-background-color: linear-gradient(to right, #111827, #7f1d1d);
-    -fx-padding: 24 30 22 30;
+    -fx-background-color: linear-gradient(to right, #080a0e, #211016 65%, #0c0e13);
+    -fx-border-color: transparent transparent #8f1d2c transparent;
+    -fx-border-width: 0 0 2 0;
+    -fx-padding: 17 26 15 26;
 }
 
 .title {
-    -fx-text-fill: white;
-    -fx-font-size: 28px;
+    -fx-text-fill: #f7d7dc;
+    -fx-font-size: 22px;
     -fx-font-weight: bold;
-    -fx-letter-spacing: 2px;
+    -fx-effect: dropshadow(gaussian, rgba(196, 27, 53, 0.48), 10, 0.3, 0, 0);
 }
 
 .subtitle {
-    -fx-text-fill: #d1d5db;
-    -fx-font-size: 13px;
+    -fx-text-fill: #be6c78;
+    -fx-font-size: 10px;
+    -fx-font-weight: bold;
 }
 
 .conversation {
-    -fx-background: #f5f7fb;
-    -fx-background-color: #f5f7fb;
+    -fx-background: #101318;
+    -fx-background-color: #101318;
     -fx-border-color: transparent;
 }
 
 .conversation > .viewport {
-    -fx-background-color: #f5f7fb;
+    -fx-background-color: #101318;
+    -fx-background-image: url("images/ultron-console-background.png");
+    -fx-background-position: center center;
+    -fx-background-repeat: no-repeat;
+    -fx-background-size: cover;
 }
 
 .messages {
-    -fx-padding: 22 28 22 28;
+    -fx-padding: 18 24 18 24;
 }
 
 .message {
-    -fx-background-radius: 16px;
-    -fx-padding: 11 14 11 14;
+    -fx-background-radius: 10px;
+    -fx-padding: 10 13 10 13;
     -fx-font-size: 14px;
-    -fx-line-spacing: 2px;
+    -fx-line-spacing: 1px;
 }
 
-.bot-message {
-    -fx-background-color: white;
-    -fx-text-fill: #1f2937;
-    -fx-effect: dropshadow(gaussian, rgba(15, 23, 42, 0.08), 8, 0, 0, 2);
+.app-sender {
+    -fx-text-fill: #c44858;
+    -fx-font-size: 10px;
+    -fx-font-weight: bold;
+    -fx-letter-spacing: 1.2px;
+}
+
+.avatar {
+    -fx-effect: dropshadow(gaussian, rgba(219, 47, 70, 0.52), 6, 0.25, 0, 0);
+}
+
+.app-message-group {
+    -fx-padding: 0 30 0 0;
+}
+
+.app-message {
+    -fx-background-color: #1b2029;
+    -fx-text-fill: #e6e9ee;
+    -fx-border-color: #39414d;
+    -fx-border-radius: 10px;
 }
 
 .user-message {
-    -fx-background-color: #991b1b;
-    -fx-text-fill: white;
+    -fx-background-color: linear-gradient(to bottom right, #a51e32, #721421);
+    -fx-text-fill: #fff7f8;
+    -fx-effect: dropshadow(gaussian, rgba(184, 28, 50, 0.22), 8, 0, 0, 2);
+}
+
+.error-card {
+    -fx-background-color: #35151c;
+    -fx-background-radius: 10px;
+    -fx-border-color: #dc4255;
+    -fx-border-radius: 10px;
+    -fx-padding: 9 12 9 12;
+}
+
+.error-title {
+    -fx-text-fill: #ff8b9a;
+    -fx-font-size: 10px;
+    -fx-font-weight: bold;
+    -fx-letter-spacing: 1px;
+}
+
+.error-message {
+    -fx-background-color: transparent;
+    -fx-padding: 0;
+    -fx-text-fill: #ffdce0;
 }
 
 .composer {
-    -fx-background-color: white;
-    -fx-padding: 16 28 18 28;
-    -fx-border-color: #e5e7eb transparent transparent transparent;
+    -fx-background-color: #15191f;
+    -fx-padding: 13 24 15 24;
+    -fx-border-color: #3e1f26 transparent transparent transparent;
 }
 
 .text-field {
-    -fx-background-radius: 8px;
-    -fx-border-color: #d1d5db;
-    -fx-border-radius: 8px;
-    -fx-padding: 10 12 10 12;
+    -fx-background-color: #0d1015;
+    -fx-background-radius: 7px;
+    -fx-border-color: #4b5563;
+    -fx-border-radius: 7px;
+    -fx-padding: 9 11 9 11;
+    -fx-pref-height: 42px;
+    -fx-text-fill: #eef0f3;
+    -fx-prompt-text-fill: #7b8492;
+}
+
+.text-field:focused {
+    -fx-border-color: #c13448;
+    -fx-effect: dropshadow(gaussian, rgba(193, 52, 72, 0.22), 8, 0, 0, 0);
 }
 
 .button {
-    -fx-background-color: #991b1b;
-    -fx-background-radius: 8px;
+    -fx-background-color: #a71d31;
+    -fx-background-radius: 7px;
     -fx-text-fill: white;
     -fx-font-weight: bold;
-    -fx-padding: 10 18 10 18;
+    -fx-padding: 9 16 9 16;
+    -fx-pref-height: 42px;
 }
 
 .button:hover {
-    -fx-background-color: #7f1d1d;
+    -fx-background-color: #cf2b43;
 }

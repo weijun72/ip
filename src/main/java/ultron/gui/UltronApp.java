@@ -1,5 +1,7 @@
 package ultron.gui;
 
+import java.util.Objects;
+
 import javafx.application.Application;
 import javafx.application.Platform;
 import javafx.geometry.Pos;
@@ -8,10 +10,14 @@ import javafx.scene.control.Button;
 import javafx.scene.control.Label;
 import javafx.scene.control.ScrollPane;
 import javafx.scene.control.TextField;
+import javafx.scene.image.Image;
+import javafx.scene.image.ImageView;
 import javafx.scene.layout.BorderPane;
 import javafx.scene.layout.HBox;
 import javafx.scene.layout.Priority;
+import javafx.scene.layout.Region;
 import javafx.scene.layout.VBox;
+import javafx.scene.shape.Circle;
 import javafx.stage.Stage;
 import ultron.Chatbot;
 import ultron.ui.Ui;
@@ -21,7 +27,11 @@ import ultron.ui.Ui;
  */
 public class UltronApp extends Application {
     private static final String STORAGE_PATH = System.getProperty("ultron.saveFile", "data/ultron.txt");
+    private static final String AVATAR_PATH = "/ultron/gui/images/ultron-avatar.png";
+    private static final int AVATAR_SIZE = 84;
     private final Chatbot chatbot = new Chatbot(STORAGE_PATH);
+    private final Image avatarImage = new Image(Objects.requireNonNull(
+            UltronApp.class.getResource(AVATAR_PATH)).toExternalForm());
     private VBox messages;
     private ScrollPane messageScrollPane;
     private TextField commandInput;
@@ -38,20 +48,20 @@ public class UltronApp extends Application {
         scene.getStylesheets().add(getClass().getResource("/ultron/gui/ultron.css").toExternalForm());
 
         stage.setTitle("Ultron Task Manager");
-        stage.setMinWidth(560);
-        stage.setMinHeight(480);
+        stage.setMinWidth(500);
+        stage.setMinHeight(420);
         stage.setScene(scene);
         stage.show();
 
-        addBotMessage("I am Ultron. Tell me what you need to remember.\n\n"
+        addAppMessage("I am Ultron. Tell me what you need to remember.\n\n"
                 + "Try: todo read book, deadline submit report /by Friday, or list.");
     }
 
     private VBox createHeader() {
-        Label title = new Label("ULTRON");
+        Label title = new Label("U L T R O N");
         title.getStyleClass().add("title");
 
-        Label subtitle = new Label("Your sharp, slightly impatient task assistant");
+        Label subtitle = new Label("TASK CORE ONLINE  //  AWAITING COMMAND");
         subtitle.getStyleClass().add("subtitle");
 
         VBox header = new VBox(3, title, subtitle);
@@ -60,7 +70,7 @@ public class UltronApp extends Application {
     }
 
     private ScrollPane createConversation() {
-        messages = new VBox(12);
+        messages = new VBox(14);
         messages.getStyleClass().add("messages");
 
         messageScrollPane = new ScrollPane(messages);
@@ -94,9 +104,14 @@ public class UltronApp extends Application {
         commandInput.clear();
 
         StringBuilder response = new StringBuilder();
-        boolean shouldExit = chatbot.processCommand(command, new Ui(line -> appendResponse(response, line)));
+        StringBuilder error = new StringBuilder();
+        boolean shouldExit = chatbot.processCommand(command, new Ui(
+                line -> appendResponse(response, line), line -> appendResponse(error, line)));
         if (!response.isEmpty()) {
-            addBotMessage(response.toString());
+            addAppMessage(response.toString());
+        }
+        if (!error.isEmpty()) {
+            addErrorMessage(error.toString());
         }
         if (shouldExit) {
             Platform.exit();
@@ -104,6 +119,9 @@ public class UltronApp extends Application {
     }
 
     private void appendResponse(StringBuilder response, String line) {
+        if (line.matches("_+")) {
+            return;
+        }
         if (!response.isEmpty()) {
             response.append(System.lineSeparator());
         }
@@ -114,19 +132,63 @@ public class UltronApp extends Application {
         addMessage(message, "user-message", Pos.CENTER_RIGHT);
     }
 
-    private void addBotMessage(String message) {
-        addMessage(message, "bot-message", Pos.CENTER_LEFT);
+    private void addAppMessage(String message) {
+        Label sender = new Label("ULTRON");
+        sender.getStyleClass().add("app-sender");
+
+        Label messageLabel = createMessageLabel(message, "app-message");
+        VBox messageGroup = new VBox(4, sender, messageLabel);
+        messageGroup.getStyleClass().add("app-message-group");
+
+        HBox messageRow = new HBox(9, createAvatar(), messageGroup);
+        messageRow.setAlignment(Pos.CENTER_LEFT);
+        messages.getChildren().add(messageRow);
+        scrollToNewestMessage();
+    }
+
+    private void addErrorMessage(String message) {
+        Label errorTitle = new Label("COMMAND NEEDS ATTENTION");
+        errorTitle.getStyleClass().add("error-title");
+        Label messageLabel = createMessageLabel(message, "error-message");
+
+        VBox errorCard = new VBox(4, errorTitle, messageLabel);
+        errorCard.getStyleClass().add("error-card");
+        HBox messageRow = new HBox(errorCard);
+        messageRow.setAlignment(Pos.CENTER_LEFT);
+        messages.getChildren().add(messageRow);
+        scrollToNewestMessage();
     }
 
     private void addMessage(String message, String styleClass, Pos alignment) {
-        Label messageLabel = new Label(message);
-        messageLabel.setWrapText(true);
-        messageLabel.setMaxWidth(540);
-        messageLabel.getStyleClass().addAll("message", styleClass);
+        Label messageLabel = createMessageLabel(message, styleClass);
 
         HBox messageRow = new HBox(messageLabel);
         messageRow.setAlignment(alignment);
         messages.getChildren().add(messageRow);
+        scrollToNewestMessage();
+    }
+
+    private Label createMessageLabel(String message, String styleClass) {
+        Label messageLabel = new Label(message);
+        messageLabel.setWrapText(true);
+        messageLabel.setMinWidth(Region.USE_PREF_SIZE);
+        messageLabel.maxWidthProperty().bind(messageScrollPane.widthProperty().subtract(132));
+        messageLabel.getStyleClass().addAll("message", styleClass);
+        return messageLabel;
+    }
+
+    /** Creates the compact circular marker shown beside each response from Ultron. */
+    private ImageView createAvatar() {
+        ImageView avatar = new ImageView(avatarImage);
+        avatar.setFitWidth(AVATAR_SIZE);
+        avatar.setFitHeight(AVATAR_SIZE);
+        avatar.setPreserveRatio(true);
+        avatar.setClip(new Circle(AVATAR_SIZE / 2.0, AVATAR_SIZE / 2.0, AVATAR_SIZE / 2.0));
+        avatar.getStyleClass().add("avatar");
+        return avatar;
+    }
+
+    private void scrollToNewestMessage() {
         Platform.runLater(() -> messageScrollPane.setVvalue(1));
     }
 }

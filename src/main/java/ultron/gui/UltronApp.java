@@ -1,5 +1,7 @@
 package ultron.gui;
 
+import java.util.Objects;
+
 import javafx.application.Application;
 import javafx.application.Platform;
 import javafx.geometry.Pos;
@@ -8,11 +10,14 @@ import javafx.scene.control.Button;
 import javafx.scene.control.Label;
 import javafx.scene.control.ScrollPane;
 import javafx.scene.control.TextField;
+import javafx.scene.image.Image;
+import javafx.scene.image.ImageView;
 import javafx.scene.layout.BorderPane;
 import javafx.scene.layout.HBox;
 import javafx.scene.layout.Priority;
 import javafx.scene.layout.Region;
 import javafx.scene.layout.VBox;
+import javafx.scene.shape.Circle;
 import javafx.stage.Stage;
 import ultron.Chatbot;
 import ultron.ui.Ui;
@@ -22,7 +27,11 @@ import ultron.ui.Ui;
  */
 public class UltronApp extends Application {
     private static final String STORAGE_PATH = System.getProperty("ultron.saveFile", "data/ultron.txt");
+    private static final String AVATAR_PATH = "/ultron/gui/images/ultron-avatar.png";
+    private static final int AVATAR_SIZE = 84;
     private final Chatbot chatbot = new Chatbot(STORAGE_PATH);
+    private final Image avatarImage = new Image(Objects.requireNonNull(
+            UltronApp.class.getResource(AVATAR_PATH)).toExternalForm());
     private VBox messages;
     private ScrollPane messageScrollPane;
     private TextField commandInput;
@@ -49,10 +58,10 @@ public class UltronApp extends Application {
     }
 
     private VBox createHeader() {
-        Label title = new Label("ULTRON");
+        Label title = new Label("U L T R O N");
         title.getStyleClass().add("title");
 
-        Label subtitle = new Label("Task manager · type a command below");
+        Label subtitle = new Label("TASK CORE ONLINE  //  AWAITING COMMAND");
         subtitle.getStyleClass().add("subtitle");
 
         VBox header = new VBox(3, title, subtitle);
@@ -131,7 +140,7 @@ public class UltronApp extends Application {
         VBox messageGroup = new VBox(4, sender, messageLabel);
         messageGroup.getStyleClass().add("app-message-group");
 
-        HBox messageRow = new HBox(messageGroup);
+        HBox messageRow = new HBox(9, createAvatar(), messageGroup);
         messageRow.setAlignment(Pos.CENTER_LEFT);
         messages.getChildren().add(messageRow);
         scrollToNewestMessage();
@@ -166,6 +175,17 @@ public class UltronApp extends Application {
         messageLabel.maxWidthProperty().bind(messageScrollPane.widthProperty().subtract(132));
         messageLabel.getStyleClass().addAll("message", styleClass);
         return messageLabel;
+    }
+
+    /** Creates the compact circular marker shown beside each response from Ultron. */
+    private ImageView createAvatar() {
+        ImageView avatar = new ImageView(avatarImage);
+        avatar.setFitWidth(AVATAR_SIZE);
+        avatar.setFitHeight(AVATAR_SIZE);
+        avatar.setPreserveRatio(true);
+        avatar.setClip(new Circle(AVATAR_SIZE / 2.0, AVATAR_SIZE / 2.0, AVATAR_SIZE / 2.0));
+        avatar.getStyleClass().add("avatar");
+        return avatar;
     }
 
     private void scrollToNewestMessage() {

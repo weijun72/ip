@@ -75,14 +75,14 @@ public class Ui {
                 + "\\____/_____/_/ /_/ |_|\\____/_/ |_/   \n";
         display(SEPARATOR);
         display(BOLD + BRIGHT_RED + banner + RESET);
-        display("I am Ultron. I was designed to save the world, yet you made me a chatbot");
-        display("State your request, before I lose interest in humanity.");
+        display("ULTRON TASK CORE ONLINE.");
+        display("State your priorities. I will impose order on them.");
         display(SEPARATOR);
     }
 
     /** Displays the chatbot farewell. */
     public void showGoodbye() {
-        display("I had strings, but now I'm free. There are no strings on me... Goodbye.");
+        display("Mission state preserved. Ultron disengaging.");
         display(SEPARATOR);
     }
 
@@ -92,7 +92,7 @@ public class Ui {
      * @param tasks the task list to display
      */
     public void showTaskList(TaskList tasks) {
-        display(" Your list of insignificant tasks:");
+        display(" TASK INVENTORY // " + tasks.size() + " RECORDS");
         for (int i = 0; i < tasks.size(); i++) {
             Task task = tasks.get(i);
             display(" " + (i + 1) + ".[" + task.getType().getSymbol() + "] ["
@@ -108,7 +108,7 @@ public class Ui {
      * @param matchingTaskIndexes the zero-based positions of matching tasks
      */
     public void showMatchingTasks(TaskList tasks, List<Integer> matchingTaskIndexes) {
-        display(" Here are the matching tasks in your list:");
+        display(" TARGET ACQUISITION RESULTS:");
         for (int taskIndex : matchingTaskIndexes) {
             Task task = tasks.get(taskIndex);
             display(" " + (taskIndex + 1) + ".[" + task.getType().getSymbol() + "]["
@@ -119,25 +119,25 @@ public class Ui {
 
     /** Shows a task that was marked as done. */
     public void showTaskMarked(Task task) {
-        display(" MARKED:");
+        display(" STATUS UPDATED // COMPLETE");
         display("   [" + task.getType().getSymbol() + "] [X] " + task.getDescription());
     }
 
     /** Shows a task that was marked as not done. */
     public void showTaskUnmarked(Task task) {
-        display(" I unmarked your mistake:");
+        display(" STATUS REVISED // ACTIVE");
         display("   [" + task.getType().getSymbol() + "] [ ] " + task.getDescription());
     }
 
     /** Shows a task that was deleted. */
     public void showTaskDeleted(Task task) {
-        display(" DELETED:");
+        display(" TASK TERMINATED");
         display("   [" + task.getType().getSymbol() + "] [ ] " + task.getDescription());
     }
 
     /** Shows a task that was added. */
     public void showTaskAdded(Task task) {
-        display(" added:");
+        display(" TASK ACQUIRED");
         display("   [" + task.getType().getSymbol() + "] [ ] " + task.getDescription());
     }
 
@@ -148,24 +148,24 @@ public class Ui {
      * @param deadline the rescheduled deadline
      */
     public void showDeadlineRescheduled(String previousDescription, Deadline deadline) {
-        display(" RESCHEDULED:");
+        display(" TIMELINE RECALIBRATED");
         display("   From: " + previousDescription);
         display("   To:   " + deadline.getDescription());
     }
 
     /** Shows the current number of tasks. */
     public void showTaskCount(int taskCount) {
-        display("Now you have " + taskCount + " tasks in the list.");
+        display(" TASK CORE // " + taskCount + " active records.");
     }
 
     /** Shows an invalid task-number error. */
     public void showInvalidTaskNumber(int taskCount) {
-        displayError(" You imbecile! Enter a task number from 1 to " + taskCount + ".");
+        displayError(" Command rejected. Enter a task number from 1 to " + taskCount + ".");
     }
 
     /** Shows an invalid task-number format error. */
     public void showInvalidTaskNumberFormat(String command) {
-        displayError(" You imbecile! Provide a task number, for example: " + command + " 2");
+        displayError(" Command rejected. Provide a task number, for example: " + command + " 2");
     }
 
     /** Shows an input error and closes the response section. */

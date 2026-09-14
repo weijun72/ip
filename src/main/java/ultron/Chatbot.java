@@ -50,8 +50,8 @@ public class Chatbot {
                 case TODO -> addTodo(input, ui);
                 case DEADLINE -> addDeadline(input, ui);
                 case EVENT -> addEvent(input, ui);
-                case UNKNOWN -> throw new UltronException("INVALID INPUT");
-                default -> throw new UltronException("Invalid command");
+                case UNKNOWN -> throw new UltronException("Unknown directive. Consult the recognised commands.");
+                default -> throw new UltronException("Directive could not be processed.");
             }
         } catch (UltronException e) {
             ui.showError(e.getMessage());
@@ -62,7 +62,7 @@ public class Chatbot {
     private void addTodo(String input, Ui ui) throws UltronException {
         String description = parser.getArgument(input, Parser.CommandType.TODO);
         if (description.isEmpty()) {
-            throw new UltronException("You FOOL! The description of a todo cannot be empty.");
+            throw new UltronException("A todo requires a description. Even a task needs a purpose.");
         }
         addTask(new Todo(description), ui);
     }

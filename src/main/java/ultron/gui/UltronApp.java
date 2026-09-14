@@ -53,8 +53,8 @@ public class UltronApp extends Application {
         stage.setScene(scene);
         stage.show();
 
-        addAppMessage("I am Ultron. Tell me what you need to remember.\n\n"
-                + "Try: todo read book, deadline submit report /by Friday, or list.");
+        addAppMessage("Task core linked. Your priorities are now within my jurisdiction.\n\n"
+                + "Issue an order: todo read book, deadline submit report /by Friday, or list.");
     }
 
     private VBox createHeader() {
@@ -81,11 +81,11 @@ public class UltronApp extends Application {
 
     private HBox createComposer() {
         commandInput = new TextField();
-        commandInput.setPromptText("Type a command, for example: todo read book");
+        commandInput.setPromptText("Issue an order, e.g. todo read book");
         commandInput.setOnAction(event -> submitCommand());
         HBox.setHgrow(commandInput, Priority.ALWAYS);
 
-        Button sendButton = new Button("Send");
+        Button sendButton = new Button("Execute");
         sendButton.setDefaultButton(true);
         sendButton.setOnAction(event -> submitCommand());
 

@@ -2,6 +2,33 @@
 
 Ultron is a task manager that supports todos, deadlines, and events through its JavaFX chat interface.
 
+![Ultron task manager window](Ui.png)
+
+## Getting started
+
+Start the application with `./gradlew run`. Enter commands in the input field and select **Execute** (or press
+Enter). Ultron stores tasks locally and recreates a missing data file automatically when you save your first task.
+
+## Commands
+
+| Command | Example |
+| --- | --- |
+| Add a todo | `todo read book` |
+| Add a deadline | `deadline submit report /by 20/09/2026 1800` |
+| Add an event | `event project meeting /from 2pm /to 3pm` |
+| List tasks | `list` |
+| Find tasks | `find report` |
+| Mark or unmark | `mark 1`, `unmark 1` |
+| Delete a task | `delete 1` |
+| Exit | `bye` |
+
+## Handling mistakes
+
+Ultron accepts extra spaces around commands and parameters. Invalid commands, missing parameters, repeated date
+or event markers, impossible dates, and invalid times are shown as command alerts; the application remains open
+so you can correct the command. A malformed line in the saved data file is skipped while the other valid tasks
+continue to load.
+
 ## Rescheduling deadlines
 
 Use `reschedule` to change the due date of an incomplete deadline. The task number must be the number shown by

@@ -54,7 +54,7 @@ public class UltronApp extends Application {
         stage.show();
 
         addAppMessage("Task core linked. Your priorities are now within my jurisdiction.\n\n"
-                + "Issue an order: todo read book, deadline submit report /by Friday, or list.");
+                + "Issue an order: todo read book, deadline submit report /by 20/09/2026, or list.");
     }
 
     private VBox createHeader() {

@@ -62,6 +62,26 @@ class CommandTest {
     }
 
     @Test
+    void deleteCommand_outOfRangeTaskNumber_keepsTasksAndShowsError() {
+        TaskList tasks = new TaskList(new Todo("read book"));
+        List<String> errors = new ArrayList<>();
+
+        new DeleteCommand("2").execute(tasks, new Ui(line -> { }, errors::add), storage());
+
+        assertEquals(1, tasks.size());
+        assertTrue(errors.getFirst().contains("1 to 1"));
+    }
+
+    @Test
+    void markCommand_existingTask_savesCompletedStatus() {
+        TaskList tasks = new TaskList(new Todo("read book"));
+
+        new MarkCommand("1").execute(tasks, quietUi(), storage());
+
+        assertTrue(storage().loadTasks().getFirst().isDone());
+    }
+
+    @Test
     void rescheduleCommand_absoluteDate_preservesTimeAndShowsOldAndNewDetails() throws UltronException {
         Deadline deadline = new Deadline("return book /by 2/12/2099 1800");
         TaskList tasks = new TaskList(deadline);
@@ -153,6 +173,16 @@ class CommandTest {
 
         assertTrue(output.contains(" 1.[T][ ] read book"));
         assertTrue(output.contains(" 3.[T][ ] return book"));
+    }
+
+    @Test
+    void findCommand_noMatchingTasks_showsResultHeading() {
+        TaskList tasks = new TaskList(new Todo("read book"));
+        List<String> output = new ArrayList<>();
+
+        new FindCommand("milk").execute(tasks, new Ui(output::add), storage());
+
+        assertTrue(output.contains(" TARGET ACQUISITION RESULTS:"));
     }
 
     private Storage storage() {

@@ -22,6 +22,8 @@ public class Deadline extends Task {
     private static final String INVALID_TIME_MESSAGE = "You FOOL! Use a 24-hour time in HHmm format.";
     private static final DateTimeFormatter TIME_FORMAT = DateTimeFormatter.ofPattern("HHmm")
             .withResolverStyle(ResolverStyle.STRICT);
+    private static final DateTimeFormatter DATE_FORMAT = DateTimeFormatter.ofPattern("d/M/uuuu")
+            .withResolverStyle(ResolverStyle.STRICT);
 
     protected LocalDate date;
     protected String time;
@@ -34,12 +36,12 @@ public class Deadline extends Task {
      */
     public Deadline(String input) throws UltronException {
         super(input, TaskType.DEADLINE);
-        String[] inputs = input.split(" /by ");
-        if (inputs.length != 2) {
+        String[] inputs = input.trim().split("\\s+/by\\s+", -1);
+        if (inputs.length != 2 || inputs[0].isBlank()) {
             throw new UltronException(INVALID_FORMAT_MESSAGE);
         }
-        this.description = inputs[0];
-        String[] deadline = inputs[1].split(" ");
+        this.description = inputs[0].trim();
+        String[] deadline = inputs[1].trim().split("\\s+");
         String dateString;
         if (deadline.length == 2) {
             this.time = " " + deadline[1];
@@ -51,7 +53,10 @@ public class Deadline extends Task {
             throw new UltronException(INVALID_FORMAT_MESSAGE);
         }
         try {
-            this.date = LocalDate.parse(dateString, DateTimeFormatter.ofPattern("d/MM/yyyy"));
+            this.date = LocalDate.parse(dateString, DATE_FORMAT);
+            if (!time.isEmpty() && !isValidTime(time.trim())) {
+                throw new UltronException(INVALID_TIME_MESSAGE);
+            }
         } catch (DateTimeParseException e) {
             throw new UltronException(INVALID_FORMAT_MESSAGE);
         }

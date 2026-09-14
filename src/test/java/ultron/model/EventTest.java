@@ -23,4 +23,14 @@ class EventTest {
     void constructor_missingTimeMarker_exceptionThrown() {
         assertThrows(UltronException.class, () -> new Event("project meeting /from 2pm"));
     }
+
+    @Test
+    void constructor_repeatedFromMarker_exceptionThrown() {
+        assertThrows(UltronException.class, () -> new Event("project /from 2pm /from 3pm /to 4pm"));
+    }
+
+    @Test
+    void constructor_blankEndTime_exceptionThrown() {
+        assertThrows(UltronException.class, () -> new Event("project meeting /from 2pm /to "));
+    }
 }

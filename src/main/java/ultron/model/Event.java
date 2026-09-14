@@ -21,13 +21,16 @@ public class Event extends Task {
      */
     public Event(String input) throws UltronException {
         super(input, TaskType.EVENT);
-        String[] inputs = input.split(" /from | /to ");
-        if (inputs.length != 3) {
+        String[] inputs = input.trim().split("\\s+/from\\s+|\\s+/to\\s+", -1);
+        if (inputs.length != 3 || inputs[0].isBlank() || inputs[1].isBlank() || inputs[2].isBlank()
+                || input.trim().split("\\s+/from\\s+", -1).length != 2
+                || input.trim().split("\\s+/to\\s+", -1).length != 2
+                || !input.trim().matches(".+\\s+/from\\s+.+\\s+/to\\s+.+")) {
             throw new UltronException(INVALID_FORMAT_MESSAGE);
         }
-        this.description = inputs[0];
-        this.start = inputs[1];
-        this.end = inputs[2];
+        this.description = inputs[0].trim();
+        this.start = inputs[1].trim();
+        this.end = inputs[2].trim();
     }
 
     @Override

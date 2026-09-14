@@ -75,12 +75,20 @@ public class Storage {
             return tasks;
         }
 
+        List<String> taskLines;
         try {
-            for (String taskLine : Files.readAllLines(saveFile, StandardCharsets.UTF_8)) {
-                tasks.add(createTaskFromSavedLine(taskLine));
-            }
-        } catch (IOException | UltronException e) {
+            taskLines = Files.readAllLines(saveFile, StandardCharsets.UTF_8);
+        } catch (IOException e) {
             System.out.println(" OOPS!!! I could not load your saved tasks.");
+            return tasks;
+        }
+
+        for (String taskLine : taskLines) {
+            try {
+                tasks.add(createTaskFromSavedLine(taskLine));
+            } catch (UltronException e) {
+                System.out.println(" OOPS!!! I skipped an invalid saved task.");
+            }
         }
         return tasks;
     }

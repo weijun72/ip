@@ -2,7 +2,6 @@ plugins {
     id 'java'
     id 'application'
     id 'checkstyle'
-    id 'org.openjfx.javafxplugin' version '0.1.0'
     id 'com.gradleup.shadow' version '9.5.1'
 }
 
@@ -15,17 +14,23 @@ java {
     targetCompatibility = JavaVersion.VERSION_25
 }
 
-javafx {
-    version = '25.0.2'
-    modules = ['javafx.controls']
-}
-
 repositories {
     mavenCentral()
 }
 
 dependencies {
+    String javaFxVersion = '25.0.2'
     String jUnitVersion = '5.14.4'
+
+    implementation "org.openjfx:javafx-base:${javaFxVersion}:win"
+    implementation "org.openjfx:javafx-base:${javaFxVersion}:mac"
+    implementation "org.openjfx:javafx-base:${javaFxVersion}:linux"
+    implementation "org.openjfx:javafx-controls:${javaFxVersion}:win"
+    implementation "org.openjfx:javafx-controls:${javaFxVersion}:mac"
+    implementation "org.openjfx:javafx-controls:${javaFxVersion}:linux"
+    implementation "org.openjfx:javafx-graphics:${javaFxVersion}:win"
+    implementation "org.openjfx:javafx-graphics:${javaFxVersion}:mac"
+    implementation "org.openjfx:javafx-graphics:${javaFxVersion}:linux"
 
     testImplementation "org.junit.jupiter:junit-jupiter-api:${jUnitVersion}"
 
@@ -48,7 +53,7 @@ test {
 }
 
 application {
-    mainClass = 'ultron.gui.UltronApp'
+    mainClass = 'ultron.gui.Launcher'
 }
 
 jar {

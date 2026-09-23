@@ -29,8 +29,10 @@ public class Parser {
         String trimmedInput = input.trim();
         String commandWord = trimmedInput.split("\\s+", 2)[0];
         return switch (commandWord) {
-            case "bye" -> trimmedInput.equals("bye") ? CommandType.BYE : CommandType.UNKNOWN;
-            case "list" -> trimmedInput.equals("list") ? CommandType.LIST : CommandType.UNKNOWN;
+            case "bye" -> isStandaloneCommand(trimmedInput, commandWord)
+                    ? CommandType.BYE : CommandType.UNKNOWN;
+            case "list" -> isStandaloneCommand(trimmedInput, commandWord)
+                    ? CommandType.LIST : CommandType.UNKNOWN;
             case "mark" -> CommandType.MARK;
             case "unmark" -> CommandType.UNMARK;
             case "delete" -> CommandType.DELETE;
@@ -41,6 +43,10 @@ public class Parser {
             case "event" -> CommandType.EVENT;
             default -> CommandType.UNKNOWN;
         };
+    }
+
+    private boolean isStandaloneCommand(String input, String commandWord) {
+        return input.equals(commandWord);
     }
 
     /**

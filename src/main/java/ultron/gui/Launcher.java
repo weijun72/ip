@@ -5,7 +5,11 @@ import javafx.application.Application;
 /**
  * Launches the JavaFX interface without making it the JAR entry point directly.
  */
-public class Launcher {
+public final class Launcher {
+    /** Prevents instantiation of this utility launcher. */
+    private Launcher() {
+    }
+
     /**
      * Starts the Ultron JavaFX application.
      *

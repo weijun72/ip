@@ -31,7 +31,7 @@ public class TaskList {
      *
      * @param tasks tasks to place in the list
      */
-    public TaskList(ArrayList<Task> tasks) {
+    public TaskList(List<Task> tasks) {
         this.tasks = new ArrayList<>(tasks);
     }
 

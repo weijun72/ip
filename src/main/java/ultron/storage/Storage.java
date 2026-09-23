@@ -21,6 +21,7 @@ import ultron.model.Todo;
  * Saves tasks to, and loads tasks from, the application's data file.
  */
 public class Storage {
+    private static final String INVALID_SAVED_TASK_MESSAGE = "Invalid saved task";
     private final Path saveFile;
 
     /**
@@ -96,11 +97,11 @@ public class Storage {
     private Task createTaskFromSavedLine(String taskLine) throws UltronException {
         String[] parts = taskLine.split(" \\| ", 3);
         if (parts.length != 3) {
-            throw new UltronException("Invalid saved task");
+            throw new UltronException(INVALID_SAVED_TASK_MESSAGE);
         }
 
         TaskType taskType = TaskType.fromSymbol(parts[0])
-                .orElseThrow(() -> new UltronException("Invalid saved task type"));
+                .orElseThrow(() -> new UltronException(INVALID_SAVED_TASK_MESSAGE));
         Task task = switch (taskType) {
             case TODO -> new Todo(parts[2]);
             case DEADLINE -> createSavedDeadline(parts[2]);
@@ -109,7 +110,7 @@ public class Storage {
         if (parts[1].equals("1")) {
             task.markAsDone();
         } else if (!parts[1].equals("0")) {
-            throw new UltronException("Invalid saved task status");
+            throw new UltronException(INVALID_SAVED_TASK_MESSAGE);
         }
         return task;
     }

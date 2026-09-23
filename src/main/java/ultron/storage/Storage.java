@@ -22,6 +22,10 @@ import ultron.model.Todo;
  */
 public class Storage {
     private static final String INVALID_SAVED_TASK_MESSAGE = "Invalid saved task";
+    private static final DateTimeFormatter SAVED_DATE_FORMAT =
+            DateTimeFormatter.ofPattern("d/MMM/yyyy");
+    private static final DateTimeFormatter COMMAND_DATE_FORMAT =
+            DateTimeFormatter.ofPattern("d/MM/yyyy");
     private final Path saveFile;
 
     /**
@@ -127,8 +131,8 @@ public class Storage {
                 .split(" ");
         String time = deadline.length == 2 ? " " + deadline[1] : "";
         try {
-            LocalDate date = LocalDate.parse(deadline[0], DateTimeFormatter.ofPattern("d/MMM/yyyy"));
-            return new Deadline(description + " /by " + date.format(DateTimeFormatter.ofPattern("d/MM/yyyy")) + time);
+            LocalDate date = LocalDate.parse(deadline[0], SAVED_DATE_FORMAT);
+            return new Deadline(description + " /by " + date.format(COMMAND_DATE_FORMAT) + time);
         } catch (DateTimeParseException e) {
             throw new UltronException("Invalid saved deadline");
         }
